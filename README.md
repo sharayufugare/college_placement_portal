@@ -1,18 +1,19 @@
 # college_placement_portal
+
 # 🎓 College Placement Portal (TNP System)
 
 A full-stack **College Training & Placement Portal** built using  
 **Spring Boot + MySQL + HTML/ Tailwind CSS/ Vanilla JavaScript**
-
+```
 This portal helps students register, apply for companies and allows TNP admin to manage applications.
--Dummy Login Crediantial for STUDENT LOGIN
--email: demo@pccoer.in
--password:demo
+Dummy Login Crediantial for STUDENT LOGIN
+email: demo@pccoer.in
+password:demo
 
 Dummy Login Crediantial for TNP LOGIN
 email:tnpadmin
 password:12345
-
+```
 ## 🚀 Features
 
 ### 👩‍🎓 Student Module
@@ -47,6 +48,6 @@ password:12345
 **Database**
 - MySQL
 
----
+
 
 
