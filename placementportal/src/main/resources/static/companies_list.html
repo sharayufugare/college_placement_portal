@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Available Companies | PCCOER</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #7209b7;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --light-gray: #e2e8f0;
+            --border-radius: 12px;
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-top: 20px;
+        }
+
+        .header h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: var(--gray);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto 25px;
+            line-height: 1.6;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            background: white;
+            padding: 15px 25px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            min-width: 150px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-top: 5px;
+        }
+
+        /* Search Section */
+        .search-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 40px;
+        }
+
+        .search-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-title i {
+            color: var(--primary);
+        }
+
+        .search-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .search-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .search-label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-label i {
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+
+        .search-input {
+            padding: 14px 16px;
+            border: 2px solid var(--light-gray);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+            background: var(--light);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+            background: white;
+        }
+
+        .search-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .search-btn {
+            padding: 14px 28px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.3);
+        }
+
+        .reset-btn {
+            padding: 14px 28px;
+            background: var(--light);
+            color: var(--dark);
+            border: 2px solid var(--light-gray);
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .reset-btn:hover {
+            background: var(--light-gray);
+            border-color: var(--gray);
+        }
+
+        /* Table Container */
+        .table-container {
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            margin-bottom: 40px;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        thead {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        }
+
+        thead th {
+            color: white;
+            font-weight: 600;
+            padding: 20px;
+            text-align: left;
+            font-size: 1rem;
+            position: relative;
+        }
+
+        thead th:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 25%;
+            height: 50%;
+            width: 1px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        tbody tr {
+            border-bottom: 1px solid var(--light-gray);
+            transition: var(--transition);
+        }
+
+        tbody tr:hover {
+            background: rgba(67, 97, 238, 0.05);
+        }
+
+        tbody td {
+            padding: 20px;
+            color: var(--dark);
+        }
+
+        .company-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--dark);
+        }
+
+        .company-name:hover {
+            color: var(--primary);
+        }
+
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .skill-tag {
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .criteria-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .criteria-icon {
+            color: var(--warning);
+            font-size: 1.2rem;
+        }
+
+        .criteria-text {
+            font-weight: 500;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-align: center;
+            min-width: 100px;
+        }
+
+        .status-open {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .status-closed {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            color: var(--light-gray);
+            margin-bottom: 20px;
+        }
+
+        .empty-title {
+            font-size: 1.5rem;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .empty-text {
+            color: var(--gray);
+            max-width: 500px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 30px 0;
+            color: var(--gray);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--light-gray);
+            margin-top: 40px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.2rem;
+            }
+
+            .stats-bar {
+                gap: 15px;
+            }
+
+            .stat-item {
+                min-width: 120px;
+                padding: 12px 20px;
+            }
+
+            .stat-value {
+                font-size: 1.5rem;
+            }
+
+            .search-section {
+                padding: 20px;
+            }
+
+            .search-actions {
+                flex-direction: column;
+            }
+
+            thead th, tbody td {
+                padding: 15px 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .search-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-bar {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .stat-item {
+                width: 100%;
+                max-width: 250px;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--light);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>Available Placement Companies</h1>
+        <p>Browse through our extensive list of placement partners and find opportunities that match your skills and qualifications</p>
+
+        <div class="stats-bar">
+            <div class="stat-item">
+                <span class="stat-value" id="totalCompanies">0</span>
+                <span class="stat-label">Total Companies</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value" id="openCompanies">0</span>
+                <span class="stat-label">Currently Open</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value" id="avgCGPA">0.0</span>
+                <span class="stat-label">Avg. CGPA Required</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="search-section">
+        <h2 class="search-title">
+            <i class="fas fa-search"></i> Find Your Perfect Match
+        </h2>
+
+        <div class="search-grid">
+            <div class="search-group">
+                <label class="search-label">
+                    <i class="fas fa-code"></i> Skills
+                </label>
+                <input type="text" id="skill" class="search-input" placeholder="Enter skill (e.g., Java, Python, React)">
+            </div>
+
+            <div class="search-group">
+                <label class="search-label">
+                    <i class="fas fa-graduation-cap"></i> Minimum CGPA
+                </label>
+                <input type="number" id="criteria" class="search-input" placeholder="Enter your CGPA (e.g., 7.5)" step="0.1" min="0" max="10">
+            </div>
+
+            <div class="search-group">
+                <label class="search-label">
+                    <i class="fas fa-building"></i> Company Name
+                </label>
+                <input type="text" id="companyName" class="search-input" placeholder="Search by company name">
+            </div>
+        </div>
+
+        <div class="search-actions">
+            <button class="search-btn" onclick="searchCompanies()">
+                <i class="fas fa-search"></i> Search Companies
+            </button>
+            <button class="reset-btn" onclick="resetSearch()">
+                <i class="fas fa-redo"></i> Reset Filters
+            </button>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <div class="table-responsive">
+            <table>
+                <thead>
+                <tr>
+                    <th>Company</th>
+                    <th>Required Skills</th>
+                    <th>Eligibility Criteria</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+                <tbody id="companyTable">
+                <!-- Data will be populated here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>© 2025 PCCOER Placement Portal | Pimpri Chinchwad College of Engineering & Research</p>
+        <p style="margin-top: 8px; font-size: 0.8rem; color: var(--gray);">
+            <i class="fas fa-info-circle"></i> Note: Companies are filtered based on inclusive criteria (if your CGPA is 7, you're eligible for companies requiring ≤7)
+        </p>
+    </div>
+
+</div>
+
+<script>
+    let allCompanies = [];
+    let filteredCompanies = [];
+
+    document.addEventListener("DOMContentLoaded", async function() {
+        await loadCompanies();
+        updateStats();
+    });
+
+    async function loadCompanies() {
+        const table = document.getElementById("companyTable");
+        table.innerHTML = `
+            <tr>
+                <td colspan="4">
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                        <div class="empty-title">Loading Companies...</div>
+                        <div class="empty-text">Please wait while we fetch the latest company data</div>
+                    </div>
+                </td>
+            </tr>
+        `;
+
+        try {
+            const res = await fetch("/api/company/all");
+            allCompanies = await res.json();
+            filteredCompanies = [...allCompanies];
+
+            if (allCompanies.length === 0) {
+                showEmptyState();
+                return;
+            }
+
+            displayCompanies(allCompanies);
+        } catch (error) {
+            console.error("Error loading companies:", error);
+            table.innerHTML = `
+                <tr>
+                    <td colspan="4">
+                        <div class="empty-state">
+                            <div class="empty-icon">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div class="empty-title">Connection Error</div>
+                            <div class="empty-text">Unable to load company data. Please try again later.</div>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }
+    }
+
+    function displayCompanies(companies) {
+        const table = document.getElementById("companyTable");
+
+        if (companies.length === 0) {
+            showEmptyState();
+            return;
+        }
+
+        table.innerHTML = "";
+
+        companies.forEach(c => {
+            // Format skills as tags
+            const skills = c.skills ? c.skills.split(',').map(skill =>
+                `<span class="skill-tag">${skill.trim()}</span>`
+            ).join('') : '<span style="color: var(--gray);">Not specified</span>';
+
+            // Determine status badge
+            const badge = c.status === "Open"
+                ? `<span class="status-badge status-open"><i class="fas fa-check-circle"></i> ${c.status}</span>`
+                : `<span class="status-badge status-closed"><i class="fas fa-times-circle"></i> ${c.status}</span>`;
+
+            // Format criteria with inclusive message
+            const criteriaText = c.criteria || "Not specified";
+            const criteriaDisplay = `
+                <div class="criteria-info">
+                    <i class="fas fa-graduation-cap criteria-icon"></i>
+                    <div>
+                        <div class="criteria-text">${criteriaText}</div>
+                        <div style="font-size: 0.85rem; color: var(--success); margin-top: 4px;">
+                            <i class="fas fa-check"></i> Inclusive criteria applied
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            table.innerHTML += `
+                <tr>
+                    <td>
+                        <div class="company-name">${c.companyName}</div>
+                    </td>
+                    <td>
+                        <div class="skills-list">${skills}</div>
+                    </td>
+                    <td>
+                        ${criteriaDisplay}
+                    </td>
+                    <td>${badge}</td>
+                </tr>
+            `;
+        });
+    }
+
+    function searchCompanies() {
+        const skillQuery = document.getElementById("skill").value.trim().toLowerCase();
+        const cgpaQuery = parseFloat(document.getElementById("criteria").value.trim());
+        const companyQuery = document.getElementById("companyName").value.trim().toLowerCase();
+
+        filteredCompanies = allCompanies.filter(company => {
+            // Filter by skill
+            if (skillQuery && !company.skills.toLowerCase().includes(skillQuery)) {
+                return false;
+            }
+
+            // Filter by company name
+            if (companyQuery && !company.companyName.toLowerCase().includes(companyQuery)) {
+                return false;
+            }
+
+            // Filter by CGPA (inclusive)
+            if (!isNaN(cgpaQuery) && company.criteria) {
+                const criteriaText = company.criteria.toLowerCase();
+
+                // Extract CGPA number from criteria
+                const cgpaMatch = criteriaText.match(/(\d+(\.\d+)?)/);
+                if (cgpaMatch) {
+                    const requiredCGPA = parseFloat(cgpaMatch[0]);
+
+                    // Check if criteria contains comparison operators
+                    if (criteriaText.includes('>')) {
+                        // For "CGPA > X", user needs X < their CGPA
+                        if (cgpaQuery <= requiredCGPA) return false;
+                    } else if (criteriaText.includes('>=') || criteriaText.includes('≥')) {
+                        // For "CGPA >= X", user needs X ≤ their CGPA
+                        if (cgpaQuery < requiredCGPA) return false;
+                    } else if (criteriaText.includes('<')) {
+                        // For "CGPA < X", user needs X > their CGPA
+                        if (cgpaQuery >= requiredCGPA) return false;
+                    } else if (criteriaText.includes('<=') || criteriaText.includes('≤')) {
+                        // For "CGPA <= X", user needs X ≥ their CGPA
+                        if (cgpaQuery > requiredCGPA) return false;
+                    } else if (criteriaText.includes('=')) {
+                        // For "CGPA = X", user needs exact match
+                        if (cgpaQuery !== requiredCGPA) return false;
+                    } else {
+                        // Default: assume minimum requirement
+                        if (cgpaQuery < requiredCGPA) return false;
+                    }
+                }
+            }
+
+            return true;
+        });
+
+        displayCompanies(filteredCompanies);
+        updateStats();
+    }
+
+    function resetSearch() {
+        document.getElementById("skill").value = "";
+        document.getElementById("criteria").value = "";
+        document.getElementById("companyName").value = "";
+
+        filteredCompanies = [...allCompanies];
+        displayCompanies(allCompanies);
+        updateStats();
+    }
+
+    function showEmptyState() {
+        const table = document.getElementById("companyTable");
+        table.innerHTML = `
+            <tr>
+                <td colspan="4">
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div class="empty-title">No Companies Found</div>
+                        <div class="empty-text">Try adjusting your search filters or check back later for new opportunities</div>
+                    </div>
+                </td>
+            </tr>
+        `;
+    }
+
+    function updateStats() {
+        const totalCompanies = allCompanies.length;
+        const openCompanies = allCompanies.filter(c => c.status === "Open").length;
+
+        // Calculate average CGPA requirement
+        let totalCGPA = 0;
+        let cgpaCount = 0;
+
+        allCompanies.forEach(company => {
+            if (company.criteria) {
+                const cgpaMatch = company.criteria.match(/(\d+(\.\d+)?)/);
+                if (cgpaMatch) {
+                    totalCGPA += parseFloat(cgpaMatch[0]);
+                    cgpaCount++;
+                }
+            }
+        });
+
+        const avgCGPA = cgpaCount > 0 ? (totalCGPA / cgpaCount).toFixed(1) : "0.0";
+
+        // Update display
+        document.getElementById("totalCompanies").textContent = totalCompanies;
+        document.getElementById("openCompanies").textContent = openCompanies;
+        document.getElementById("avgCGPA").textContent = avgCGPA;
+    }
+
+    // Add enter key support for search
+    document.addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            searchCompanies();
+        }
+    });
+</script>
+
+</body>
+</html>

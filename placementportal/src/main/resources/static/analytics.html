@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics - Placement Stats</title>
+
+    <!-- Tailwind+ Chart.js CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body class="bg-gray-100">
+
+<!-- MAIN CONTENT -->
+<div class="p-6">
+    <h1 class="text-2xl font-bold mb-6">📊 Placement Analytics</h1>
+
+    <!-- Grid Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- Placement Chart -->
+        <div class="bg-white rounded-xl p-6 shadow-md">
+            <h2 class="text-lg font-semibold mb-3">Yearly Placement Stats</h2>
+            <canvas id="placementChart"></canvas>
+        </div>
+
+        <!-- Internship Chart -->
+        <div class="bg-white rounded-xl p-6 shadow-md">
+            <h2 class="text-lg font-semibold mb-3">Yearly Internship Stats</h2>
+            <canvas id="internshipChart"></canvas>
+        </div>
+
+        <!-- Combined -->
+        <div class="bg-white rounded-xl p-6 shadow-md lg:col-span-2">
+            <h2 class="text-lg font-semibold mb-3">Total Students vs Placements vs Internships</h2>
+            <canvas id="combinedChart"></canvas>
+        </div>
+
+    </div>
+</div>
+
+<script src="analytic-data.js"></script>
+
+</body>
+
+</html>

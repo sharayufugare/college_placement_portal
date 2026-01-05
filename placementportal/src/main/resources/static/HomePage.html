@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PCCOER Placement Portal</title>
+    <script src="https://unpkg.com/tailwindcss-jit-cdn"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            color: #1e293b;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .hero-gradient {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-gradient::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow:
+                0 8px 32px rgba(0, 0, 0, 0.1),
+                0 2px 8px rgba(0, 0, 0, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        }
+
+        .hover-lift {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-8px);
+            box-shadow:
+                0 20px 40px rgba(0, 0, 0, 0.15),
+                0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-blur {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .icon-wrapper {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .icon-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, currentColor 0%, transparent 100%);
+            opacity: 0.1;
+        }
+
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .wave-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='20' viewBox='0 0 100 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 10 C20 0, 40 20, 60 10 S80 0, 100 10' stroke='%233b82f6' stroke-width='0.5' fill='none' opacity='0.2'/%3E%3C/svg%3E");
+            background-repeat: repeat-x;
+            height: 20px;
+        }
+
+        .stats-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow:
+                0 4px 6px rgba(0, 0, 0, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        }
+
+        .floating-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .floating-shape {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(30, 58, 138, 0.05) 100%);
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            25% {
+                transform: translate(100px, 50px) rotate(90deg);
+            }
+            50% {
+                transform: translate(50px, 100px) rotate(180deg);
+            }
+            75% {
+                transform: translate(-50px, 50px) rotate(270deg);
+            }
+        }
+
+        .login-button {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .login-button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .login-button:hover::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        .feature-highlight {
+            position: relative;
+        }
+
+        .feature-highlight::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 24px;
+            background: linear-gradient(to bottom, #3b82f6, #1e3a8a);
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+<!-- Floating Background Shapes -->
+<div class="floating-shapes">
+    <div class="floating-shape" style="width: 300px; height: 300px; top: -150px; right: -150px;"></div>
+    <div class="floating-shape" style="width: 200px; height: 200px; bottom: 100px; left: -100px;"></div>
+    <div class="floating-shape" style="width: 150px; height: 150px; top: 50%; left: 10%;"></div>
+</div>
+
+<!-- Navbar -->
+<nav class="nav-blur px-6 py-4 flex justify-between items-center sticky top-0 z-50 shadow-sm">
+    <div class="flex items-center gap-3">
+        <div class="relative">
+            <div class="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl opacity-20"></div>
+            <img src="data:image/png;base64,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" alt="Logo" class="h-12 relative z-10" />
+        </div>
+        <div class="font-semibold text-lg leading-tight">
+            <span class="gradient-text font-bold">PCET's PCCOER</span><br />
+            <span class="text-xs text-gray-600">Pimpri Chinchwad College of Engineering & Research</span>
+        </div>
+    </div>
+
+    <ul class="hidden md:flex gap-8 font-medium text-gray-700">
+        
+        <li>
+            <a href="registration.html" class="hover:text-blue-600 cursor-pointer font-medium feature-highlight pl-3 transition-colors duration-300">Register</a>
+        </li>
+        <li>
+            <a href="companies_list.html" class="hover:text-blue-600 cursor-pointer flex items-center gap-2 font-medium transition-colors duration-300">
+                <i class="bi bi-building text-blue-600"></i> Company List
+            </a>
+        </li>
+        <li>
+            <a href="analytics.html" class="hover:text-blue-600 cursor-pointer flex items-center gap-2 font-medium transition-colors duration-300">
+                <i class="bi bi-graph-up text-blue-600"></i> Placement Stats
+            </a>
+        </li>
+        <li>
+            <a href="http://127.0.0.1:5000" class="hover:text-blue-600 cursor-pointer flex items-center gap-2 font-medium transition-colors duration-300">
+                <i class="bi bi-cpu text-blue-600"></i> Prediction
+            </a>
+        </li>
+    </ul>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero-gradient text-center py-24 px-4 relative overflow-hidden">
+    <div class="relative z-10">
+        <h1 class="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">PCCOER Placement Portal</h1>
+        <p class="mt-4 text-gray-100 text-lg max-w-2xl mx-auto opacity-90">Your gateway to campus placements, company insights, and career opportunities. Access tailored portals for students and placement coordinators.</p>
+
+        <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <div class="flex items-center text-white text-sm">
+                <i class="bi bi-check-circle-fill text-green-300 mr-2"></i>
+                <span>10+ Companies Registered</span>
+            </div>
+            <div class="flex items-center text-white text-sm">
+                <i class="bi bi-check-circle-fill text-green-300 mr-2"></i>
+                <span>85% Placement Rate</span>
+            </div>
+            <div class="flex items-center text-white text-sm">
+                <i class="bi bi-check-circle-fill text-green-300 mr-2"></i>
+                <span>24/7 Portal Access</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Wave separator -->
+    <div class="absolute bottom-0 left-0 right-0 wave-pattern"></div>
+</section>
+
+<!-- Login Cards -->
+<section class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 px-4 py-20 -mt-10 relative z-20">
+    <!-- Student Login -->
+    <div class="glass-card rounded-2xl p-10 hover-lift">
+        <div class="icon-wrapper text-blue-600 mx-auto">
+            <i class="bi bi-mortarboard text-4xl"></i>
+        </div>
+        <h2 class="text-3xl font-bold text-center text-gray-800 mb-4">Student Portal</h2>
+        <p class="text-center text-gray-600 mb-6 text-base leading-relaxed">
+            Access your placement dashboard, view company profiles, track applications, and prepare for upcoming recruitment drives.
+        </p>
+        <div class="text-center mt-8">
+            <a href="student_login.html">
+                <button class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-4 rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-300 font-semibold text-lg shadow-lg hover:shadow-xl login-button pulse-animation">
+                    <i class="bi bi-box-arrow-in-right mr-2"></i> Student Login
+                </button>
+            </a>
+        </div>
+        <div class="mt-8 pt-6 border-t border-gray-100">
+            <h4 class="text-sm font-semibold text-gray-500 uppercase mb-3">Features Include:</h4>
+            <ul class="text-sm text-gray-600 space-y-2">
+                <li class="flex items-center">
+                    <i class="bi bi-check-circle-fill text-green-500 mr-2"></i>
+                    Company-wise eligibility criteria
+                </li>
+                <li class="flex items-center">
+                    <i class="bi bi-check-circle-fill text-green-500 mr-2"></i>
+                    Application status tracking
+                </li>
+                <li class="flex items-center">
+                    <i class="bi bi-check-circle-fill text-green-500 mr-2"></i>
+                    Placement preparation resources
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- T&P Login -->
+    <div class="glass-card rounded-2xl p-10 hover-lift">
+        <div class="icon-wrapper text-green-600 mx-auto">
+            <i class="bi bi-briefcase text-4xl"></i>
+        </div>
+        <h2 class="text-3xl font-bold text-center text-gray-800 mb-4">T&P Coordinator Portal</h2>
+        <p class="text-center text-gray-600 mb-6 text-base leading-relaxed">
+            Manage placement activities, coordinate with companies, monitor student applications, and generate placement analytics.
+        </p>
+        <div class="text-center mt-8">
+            <a href="tnp_admin_login.html">
+                <button class="bg-gradient-to-r from-green-600 to-green-700 text-white px-8 py-4 rounded-xl hover:from-green-700 hover:to-green-800 transition-all duration-300 font-semibold text-lg shadow-lg hover:shadow-xl login-button pulse-animation">
+                    <i class="bi bi-shield-lock mr-2"></i> Coordinator Login
+                </button>
+            </a>
+        </div>
+        <div class="mt-8 pt-6 border-t border-gray-100">
+            <h4 class="text-sm font-semibold text-gray-500 uppercase mb-3">Admin Features:</h4>
+            <ul class="text-sm text-gray-600 space-y-2">
+                <li class="flex items-center">
+                    <i class="bi bi-check-circle-fill text-green-500 mr-2"></i>
+                    Company database management
+                </li>
+                <li class="flex items-center">
+                    <i class="bi bi-check-circle-fill text-green-500 mr-2"></i>
+                    Placement statistics & analytics
+                </li>
+                <li class="flex items-center">
+                    <i class="bi bi-check-circle-fill text-green-500 mr-2"></i>
+                    Student progress monitoring
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="max-w-6xl mx-auto px-4 pb-16">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="stats-card rounded-2xl p-8 text-center">
+            <div class="text-4xl font-bold text-blue-600 mb-2">10+</div>
+            <div class="text-gray-600 font-medium">Registered Companies</div>
+            <div class="text-sm text-gray-500 mt-2">Active recruitment partners</div>
+        </div>
+        <div class="stats-card rounded-2xl p-8 text-center">
+            <div class="text-4xl font-bold text-green-600 mb-2">85%</div>
+            <div class="text-gray-600 font-medium">Placement Rate</div>
+            <div class="text-sm text-gray-500 mt-2">Average placement success</div>
+        </div>
+        <div class="stats-card rounded-2xl p-8 text-center">
+            <div class="text-4xl font-bold text-purple-600 mb-2">24/7</div>
+            <div class="text-gray-600 font-medium">Portal Access</div>
+            <div class="text-sm text-gray-500 mt-2">Round-the-clock availability</div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<!--<footer class="text-center py-10 text-sm text-gray-500 border-t border-gray-100 bg-white">
+    <div class="max-w-4xl mx-auto px-4">
+        <div class="mb-4">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJkAAACUCAMAAAC3HHtWAAABv1BMVEX///8dIG8Ar/D4978AAADX19fR0dH8+8OlNpL//8j///3Y153087q5uX+hoW319fCbml21tZPr6rIAAGPR0JW8vJ68vb0AAGcArfK2tLQAAF/D3esAAFfHxYr29vbIybUgHh/4vy4pJyjm5ub357Srq6tWVlYRFWyhoraLjKf27e0XGm35yClMTYSUlJQYFhd8fHzyzaGyt8Xqzc7etrcGDGn3sTZmZmY2NDVHRUZwcHB8XFzvu5Xmn3713KzkjXFpNjZWAAA5O3vJydHIdHbv3t+/VlvUl5nMhIfBYmYmKWwAoegAAE7f7PD90B2OIoCAaVjjfmibiIheIB50R0awoaKOobKBkqd5eplaWohjZYw6O3ASGV/APEXap6q3LTXBkp6zFiOyABJYr9imz+SJxOMYn9i2AAA7u+twyO2R2fUumMMAAETt6Mfj2XH54wD42jnm0Ivz0mXpxEnsmzHitUragDPWczfswnDLYTuwUEDxs1j228C8ZjSaNTPfzb+sfWqRcpqAQHyDW4WVO4Opj6Nek61EWW2bpZJgjIZ5fV1fXjOQj3dkcl5Pj5t+fkslJ07dX1LdOjo6AABUb433fRpdAAAZgUlEQVR4nO1ciX8ix5VuSYCsnkNjYyMQcg1WC2jAHGrAEkLooLmZ9qwQ4pLFrM0RaXI4cZzNrpNsMh571+tc62T+4P1edXOObEuMJrO//Pzsge7q6q6v3v2qCwnCD/QD/UD//CQyxuhLfNVApkiVG81gsCGrwPaqsYyTuTlnjXu93ri11GKvGsw4+Va9cwOyzimvGs6IfNa5MQpY1VeEQyQab2iszk1QYE6d7v5qVE+xDhEZ5D19FTgks+Lz+RRVGpw3rAGvdWUlPldKl+bwTRrnLQ24xtC91Qy2fOpLNgwmB1cBY8VqJQdhVpVGaW211PTJRPzT10QHGCkuqyrOvKtktHHrakt6me7EMrcyEBkYZV1dTTcbsiI3gqXS6elpei5unQv6FHApWLJa46vxeHxks/GS9P0DzErqB6OBAnFr0Cf7Gq25EsCpqlmSwEJFbgXX1oINsK+5MpyF4U5aL41nUmAIzBsINhTfafq0obIpBWJMkhtgoE/xBefiE9DklyXP1mAc71pLlhtrTVn9tpFEs9z4oAlTCayMeZP0S7ECUVANt+ANNBVfutSQLhnH7x81MqV1ip4l71Coqy8nOogNq+7hm7LPm5bH1TkbNXgn5s6KhXabZY0Lku8UvdMDhxdvvRRkjLPMOyfLaSvh0sGIgr9dzOUHnfJ5f+xRPnqWifmNu5TToNIwTDSQfinIpDVuX3JztTHkF4tGc8V2OzPslIsKsQwytWi+GIsZglVOG3JLV7eX4zjU1bnAqiyvrJmHGVg0V2BZfzuXG3Y6ywr5glBggOUv5NoC78rkkizzbCSgvgzrlK3xtNJ84OOD4X9/+yyTg0JlitloVO8iirmon8D5/Y8e5YVCPlfQNe5fm02lCbbFfTePCz7D2lROh9bljxYK2WgBcsxmcvl8bNCciUKGsXw77y9kMkI71+YKd5YB22BBgdOX4DfMgYa8ejrQk9iHMUHMZLJgWszvh+IP+xUgQpYv+P2ZGGNnfiF6lmcCO8uaTxs+GLZ888gaDdna5MBEgRUyxZiQPWNCsSDECoViLjvqWDBQ5vPRfAY2ki0Us0LBL0jIAQLewE3bAPM1fKsU9/xZEYrf9kfPsiyDoQmTPzvedci/fO7DqJDLFf2Pcu0CI4fYlEvx5s1CU5st2crdZL4oxHLZbK4dLcIG8sKYxxgj3QDRRSpAD2NC/iPu3hpNpbRyk9CQHDYhSpEbpb8AP/FhXoj9SOeN/9JbGJiULcJki4XCh5msQFxFyu1rygFY+M3AEtWGdSWteIOGVRXPBH8eLv4smosOOzknSENL3h/NkaRZ7KMYfC+++RRaLdkbWG0pN8A3c8sbn1tRgh/Avwosm83kM23yFOBHNKYXHvjo2OdHVO6iMVsAGPgSEQaBY3i9jJ9sp9lorMx5rekGe7GKmcmryHzicmsNEojm8/kP2yxabI/1cHZpgO44snnwjHXzxQLxLFv0589IqriduMZKchOPDKyUlBdCxjMyL5QMvjtWzPqLkGIs+5HhV6F43XKZZKf1x4B1wI5uuaPEuMn6/Xk/K2Tz2UK7SAqhzilpnhp4X8C1sRZPX7yKt8kEP7xXLJZ9lIHJ5QyuaX37vL1DkbEzAmbvQdf783Z7RxuUmdmPcu2PYuysSFyTg7KeFWG6s3FNNEpvK7ILKBniYawNN1qE7me5exK7dhKi3YnjHj/iH2WnKDj50XxPNFaGYrl81P+o3Y7SY0+5PCmRnJVryhrPqSBLnr+zzI+IVfmM4Ved/bLOpD5G54p2foFPex9JkGER9r6Tcb7kYS+Pojx0iYJ5TSnpaW58tmUGFgzoLAumdRvPIukZXe72B1pfBtM0wvSY8NkvALo8kCxESp0pn4wKfuY/I3k2Gg2vkePOFOCVuH6zb23oGVlhGCCdYyrfx/M7hMxp4Bxpnb3PkSGu48ZiBmZEZ2tKXGfabGszDZ6GBhTr6Zieth/p7hWqpPPs3HBg3bKBDFA0Ytm5fQRM5KEVOVtUKJBdyy394XPWWcIB02275Zu8O0ue3+mEapFhcjR2YpqzbLefP7ZDfCI3B+0xXdVlyfSpZaPZXCxHzJNOldKgAp0B2Zp+azo4rQsi65d7A2jzWhdM6wms1+kAW6fjJOdmfywQxzqk/+yxIVFeWkV5/utr6Zo2G7IHvNiRdS1jo8DNeULOStC4CWoX9nKXr5F14DCAuAdhihd2nWMieAoPx4nKBuPhp74XQMZLJaW0iqQBMXmYtIq68sMhEDQcnF/MO/n6ndBBPMAX65UfEyMpFmgXpHM8Tgixs6gRK0UBmdrsevaAs+yBjDItG300SiyY4S5IVuS4yuWOYSI9Q2xiZ54UDqJ09o2ulD9FxxImtdUg01+dwTZFBsP2NlpxMwMoeO9cTp+x7u7Jw4NtBMKpwTbF0boLQzC96JR7DCwd+rXu1GsC6VQm61yZIRsSWdCLIiwIXxg7y8ONsehZkZyZNhiNDygysKn7YwzlNm4MSUK3IzJo3MgX63Fi4vENHxx5YG6mPM23Ame2xlU0esbzvhilWP3xhIdEZpDDwr/cFq5KA6cy6GzvjSFDsSUoJE7vjDHACmf2E34rEpicXzfQ7hjLhrrNSRr7FHTels+7j+ftw6RtQNEMvdqAdcblmRa91cAKCkw6yhaF7IfFWB557FjQOuc8M1C5x250c3RIjM6dY/0HZpIF+yl6nqL6jM9WEailOXmNV/tR1Jb5dpS0bH4oS/uFs8eDpMBCgmAhWeoMsJkF5qY8d17TLgxj0eMpXY5lCkWhAGMK+kqzIjOXWg094hYHHkOEpx9THudjuFg0W9yTdzJYASN/O1Iz8KyLFC/mp5IA6KDG9fTMPAs0mnr+8yjT1lMMMEXUnL1OuWyMB19G+mPTtX95WXekJE5nvztwL+jUdWrco2VyGfK4+TOocaPpjc9WCyhW+AwugEK2kMvlswM7gpd39iidRjqL9BHJoaBf+unPBl3g3ZioIcgj2necy8Ph/RmKA0woZAVz0GeNz7akjFQ2wNWMtMJ/1oZMGRs+SNS6vX6HiiRNchsGufHxLT38SBAnwlWvf9HVlgc3ME1jiCY8zCGsSyXZGm/MgEsQmgGZBw8/LW2imGUkov58p9PrdVHtgiuaAVQykH3y8cc/5QeMGkRgYUxzOrs95CGd+f58P0vrRFR+RlGNnirWwExrkOYHyDMkcmLtWKbY5hh0zYGMoDvlcr/fnbhj+efvf/zz5aF8iGfUjboPAgFdjH70oxjsU2gp1tkiemul6VtbFortaGyQIQxC5tBx9EhwoZAORNh4H/Qz3XeYQxDoVHeelYNdsbNMG467IXtnWunzrVh9zTU8iJZbo1k/RzaW3xPf7D02psBgGdEGSTANDhO1E9/Pz8zFkGnltJsA+M1HBR5Ez3riuCRCn5bQXR+2zdjtzlisWEDPHRnnsdDrPoTsasxi68gvC9e77nwxUHmZ7Dk0Ux8KGpq+1ARbKPLnVQva4cq2VW5HWsedWZG+QKkUqrGMFeqI4XCOwz188fnwxD2MQBsh++v67nHSm2SLIzvSq0z6BjBdgOdZuC0rQF9ffq1yDbYyKaKuy2hJibfYolmUZqnhEcTwBIhqzgOVfvvvuO+/Q/58MJwhkk5pGyMRC1J+LwjjVJkfmPb2Ofcr0YnxFWWv4c5S864nZZGrGeYGo6Xbr3uwX7wzoV5xnFpsk9uD/7ePYKMpmoWXtTCGDbIOntbS8cWUST3n5gHgeLQqx0bL1oPQmp9HvdXuok+B89Wz2kyGyX9KpJEHIzi58WadfHsLjyM4Y7DOfEySdZ3OBwFWlCS3zGmWTz59rF8+KmXwsm6Wsnocb+NquJpLl2SnVkCI8zXgPmD799J133vmP88yNIN8r2/tdmABF2k6fmEzI9FqYZQiZvoawetUXK6LAU3RCJiObyseisXahWORZ43lPj81a77xs1ysPJnAT+BUw/duv8fHev9NrfbRonLvzPb1Kp1hwwZEx7vDgVZq+wPVWq4DMOl5q6kQiY3rcFFHMGeIB01jIQdf3gOnX//EpPn+LM3PExoaVDC0IXUJDZFeOnkBG8g8EfWuXxQ7N2SmPVR6CjfEMexks++yzX7/36W+W+TQsIzdmL/e7xvLGFDJdmt7GFXPugTQvQyayruEw+Nc8dxw2njjuffq7zz773aefEsso1+gMYyzv2dOmd7oMeXYNZLoFXIJM6/UxCCUbXaQcF+fzvN6VBL5Ovfe7//zP3/3mt5S+QdGcZMDUFXTRmS/by50poY6kefVVUemDwKXIaGGq3NUoUwxtb3u2Qkq3w51tiI/5+z/84fc81aDsWyML1myhLY8N3TUnX7i9nGcr10g4UAQDmTyNjHS6zJjZ4g6bwuvbJtD2TshmMU97cbNZsthOtsLUI2zaoq0A3B608U5DPbNeI98g49TXNCaIVMeuOVwm07ornMDgIQ+NbUpsRdzm0Yg2945nnYPyRNw7YZdp27MT6jyHbODP4s2rAxNYCZV9SV6bRkYq7bSYXOtAtm10tbgjngTnjmcrEookwEcgDdnMOiciJpfLBb51BjFgHJkenczClUkU+Xq7UW2OISOe9RhJ0uXaHomQEft2IN3wjtsB2Y5LJxF2rYc9ptD8FDLYmZ5rrFxvBUFKB5AFTSPjutIRwgkXkLksA1xDgInE84OAZeumiMlhn5+UpjjINQLX3GKlrCELWptyzgYyT2Q94XKZHHqj2RMJuXXZDZExyWxzc4NlhCwcWVfm56f1TM/Prv+2ouFF5jilu/x1RIeFEp7EtssUMlolixu+wQMWJjyMIrwnkfBA5zkyM5TSldjydHnAmGCOTGu118+2BZZGtl2abNPzM81mirig85HJ/sxAxiYUzUHIgPOxzu4RiagDmrDNGZap5NVGY3WiReTI7E6zKWTyhMMEQ5B23CMgHJlBEghnIUK25Qn17HqpNfa0hly6VtY4evRa0/dgYkYirwPKTmk9YtoKh7lxMndoxwO3JQ2RoZ6DYFlki3v/rbBrO7yTsPE3UhPlKWuiClq9hscY3TkHhzahsqJouA3PzvoWTGDgNqDvY8gkh4O/PtZzXfA2AJZr/FWLNq5TUmnGGl1k6YA89VpINIwzAhNIuEyW6Xsky5DHkmSmmCUlDGTcAMarU8Gc9q0E0uzaBkBxwCvPTZk0N86+ENre2vaETTz5sTkunbZnO5GA8ZrXXfAwkS3SUHtnoofSasVn28THVr2+4JRD41MvCzYgQ7jeoSZLxLO9w59/2extYFl4y+Og1d3y5CqIT04jZs6y4qKuehvNqd2cjCPTpO2d7Z2MaTRKQzUe9HZ7YBV04DBRZLJZeDyfiJq0Gjrbmwqh6fW2GsGpOXHj74quyPrOenh9DLL65POn4Jz8xRPaS8XIZ1B7iJC516X+vLHeMrrj1Dfj9kIlTnnQdB7g5AWTsB5xRbbDrtHWvScPX3vtoSpIn7/28OHTsXt2kHishzzLz6vZjFFTf4OCZPMnRu5oYBCFsm6ckfXItitsG3YHMEB7+gV9vfblcDCWCCeQnEX4hAbC1FknN/l7xOu7WpWvH8hpwwS2bQYynmZpbk9iZ2CcnHRIBo0yYQZl3N7ZcpMSDF5yuvW7Wj7+mj5wrVUNIp9ePslr+giI3+4Q3whR5snj+s52yKTHdOXzLyXl4TgyWZBknTGSyQXLTZgpApAwJYsU0k1aCij6jwrWrhsFWnoirDygKZkjSJn1rIeqSHtPgr25kSeSzj+Eak0Ae+2LL754+IRDQ/q7Y4qs82qdfAZDxhteJw+tnvpWZtv8q++IiMtp8rU7SLLCW3ws2sxi70jgGDkEVHRDUF88fSJ/+fng9OGX1NttckVMoW1tWANY6EmkBS3f6XDpYBZk3kaLp2iOcNhkZIVcZdhOJBxKhNcl4cshn/SNhuoTA9tDOo+Y1ndM7pDT2KPDxRuGzorMKxtbpq+35igMNo9D0QJcD1yJRFhXVf4KzhnaQhViMpmFL3Ugn+vaQjth9BZdnFumLQQpG7041i0TKsDzOmVQ0V3/Tbqhn1aFV3ZskL9ibNqk1HMkdrbdXPWecGDLY7c6CNpTzmEK5iGPuTyM5kjZLEAmthotA9m18yBJ34SCMEB57ehVtL4DqGPTkQGwSjgmF8CeoukJf8g2kDkSankiaaQUZE0xhOl9bs/F95CxUgWjVtamQhvfatZFlRJaN20J0lMAezLpxiV4ty/oBw0W1zaqpq2OfTpm+pqGZQYC108dWXBFXw1pToW2ZbLOXiKy7k6Et1VysQ+nDf8JN1VZsJm2PNvurfN5+/wkZx4oOscC5DOuX6I0ubNt+qZ3FfEkzRNxuT1hF1f3h8tTtyq6dTK3KZLY2fkv+1SeLch6DTznDcz2fpP51qyBOa9ibRk/8zJ+7CXSwt5/Q5pIhJ5y/R9d1+826+YJfx9JRLZ+DMucTDOCPq7/8blZciBOkpyOe5vPLVZd2O32fmR7B3XR5zqy6TnpyNQdU8gV8tjtk0UT7J5+VRZYmfkHUMQByWe1Kun0/bfG6av/AX399dd/+uPXX/8L0VuTdP9+ktNXX//xT3/805//8pe/fHV/nE6p0FwpyeKL7VtVVlq+rTtvTtMtEP/gByN6+3vpztt/hd0HGi+4HV+kX0C679xevISWlpYub51u3tiY7PHmXwMzVcDTxP737u3FhUsotZ/aeO7C4uZRanNhonlxd393suHNP3tv4EcfovDXW8ZzNzc2NxYWNgy6ndrY2N0dnA2aF9G6mdrbmKRdfuPm3qb+oKU7X93Ez1Hu3xvOfTe1ubi4m9rf3U8dbS4cpXZ39/d3U0epo6PU7c0ULhylFlNHu7u73+A/dNulY3zs7+LCwt7+Zkqf4+Ib924AmPj6G4vjyCDF3aX9jaOlxdTebmp3E223U/sbi7dTezjeWNxLbe7uHS0dLe2l8L2Je/bB3d3NcWQLi2+/9eLIlu8uTvJs82+bqaO9o8XF1Ob+0u5mal9Htgd27ab2Fvf29xcWjjb/tn/0zd7GN/u7G3v7ULyjSWQLt+9Nx43rk3RvEhm+bi+lNg2efQMGQef3N6D6+0ccWWojlTpa2lzaI0Eu7ALmUmp/fwrZ0r37L4zs/ohnKV2aG6mF1N4+eLa3uLC5u7C5uZdKQcEXCQshW1qALDGB1NLS/u293QV0XZqS5sLinRdHNuLZwt7e5p7x4HEfsLg4PF8c/NtbgEXcnvQesOzNIc9uBNkbi2MYrkhQ+d3921ONoxlAmrMs6U0jA7Qr0QC9frK3t/Adfe/cgJ5Jd96+91zUvIy4P15840p0584NSFO8u3DrzlXo3h0I6869K9GtxRvwGoL53u2lqxBQvXnvzu3LovxzUX/xzg14WlF4696tq9AbS7fuQqK3r0Bv3Lt7E7/iFIX7r1+F7r69AL7dvRLdF/+Rfx1k+fV7t+69vnwlurFBrzI/Ss3vvrjBvST6f/X3W36gH+ifiSTzq6VvX4G3OBwOG/3PP4x/OMM/N7Xa+CXe4hj1GbbwjjrZRt2MfrzRbTx+ot/wUZe/9tORVQ8OKsnkyeFJ8tBxWD04Oa4eVCoHuL1aPT45OMGFQ/dB8uTAXT04PqlWbIeVg8rhyfFJ5bBiOTg+rthsleNkpXJ4kHQcV06OHUk8z1Y9duBaspLkT6kcOnDjycHhcTJ5UE1Wjm3VSqWarSSPj6vfnk5aqslqEsiOk3jaYQVg6KyK8Q4cJ3hu8thx7KgeA86x2+2oHgD/cfU4eWBLVqsWmoODIzs5cFAfID7GbScH1RNHMmmrJCvUsXKIf5jrcQWNODy2ABlmi+vfybMq9ccUqlXHYbJiO04enpwccGSVE4A+JGSV4yohPUHnQ1sVLAODktTOkQER7hghO8GwVVsyaeHIKmBO9RDI0AMwibHg2QlGxHXbdyGrWPAQCBSD/N1ts0Gsx1yaBwfgA5cmhFohMR2SNP/uSB7aDtD75KBiSPMQEjpE7woEaCOhH0K6NuLZge0Ap2ANR4YPzAXgDwyhfzey2wuTY6Y7jLu+HZnZ8mrpJf6po5dMIqMfwmja6HcnOtFuRm1yB8fycCuVpkni2L4qummsqyQZ22jHx2D6K5BrMEp6xgRWe1Yf/sU8s+5nVIsgNGv18WXMmiDqK/ras1oNo9dG89DU0cKzWq+rqrFBQf9tm1oX5Loi1eusVr/60rvaoNnWGKupZlFVa1JNMddUJtfNglgXFJyquKIoTK0BmSopNSZo9HpKATom0blaM9dqqliTmVLDBDEb1Yx2SaqrTKFt93VZkgVFlhgeUb8ysrpUo0+m1bWaWKuZzYpal+oKvgTh9FldeAZ0dcWJwdFRrKNdAZ/rOJBqqqSqdaaoquxUwSfMQcLA7NkzDd3NwKygN3gvKUw213ECjnFkV9lSy54pz3RkilYT8GSM80zBhFUIFTyDIBSlrjDFUhMUQgb+CTQZVcVFSQVPwB5CpoB/ilhjoirwmTGlLogyiV1giqDVCGdNuTrPFBqAOKfhJrXGpQd1AJPQ+kyqm+usrhEyM/HDQAb+ahLYAmaZweCaJJsVzjMFaoHHGMhqGjRDMdNLEEYcVhUzSajB2PevwkM5Rb5XXWVMAnMkjM9UDToGxYL21cwCHapQKAb5iKLK+K4R0jGcQzeZuS4qipPRDKGLAvoItTrtYWJmEbcr9AfA8GypJokycZuJssDkV/JXIH+oqf4h9H/D1GLQMZW0NAAAAABJRU5ErkJggg==" alt="Logo" class="h-10 mx-auto mb-4 opacity-70" />
+        </div>
+        <p class="mb-2">&copy; 2025 PCCOER Placement Portal. All rights reserved.</p>
+        <p class="text-xs text-gray-400 max-w-md mx-auto">An official portal for Training & Placement activities at Pimpri Chinchwad College of Engineering & Research.</p>
+        <div class="mt-6 flex justify-center space-x-6">
+            <a href="#" class="text-gray-400 hover:text-blue-600 transition-colors">
+                <i class="bi bi-linkedin"></i>
+            </a>
+            <a href="#" class="text-gray-400 hover:text-blue-500 transition-colors">
+                <i class="bi bi-twitter"></i>
+            </a>
+            <a href="#" class="text-gray-400 hover:text-blue-700 transition-colors">
+                <i class="bi bi-facebook"></i>
+            </a>
+            <a href="#" class="text-gray-400 hover:text-red-500 transition-colors">
+                <i class="bi bi-instagram"></i>
+            </a>
+        </div>
+    </div>
+</footer>-->
+<section class="py-24 px-6 bg-gradient-to-br from-blue-50 to-green-50">
+    <div class="max-w-6xl mx-auto text-center">
+        <h2 class="text-4xl font-bold mb-16 text-gray-900">Success Stories</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+            <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition duration-300">
+                <p class="text-gray-600 italic mb-6">"This portal made my placement journey so smooth. I landed my dream job at a top tech company!"</p>
+                <div class="flex items-center justify-center">
+                    <img src="https://tse1.mm.bing.net/th/id/OIP.36zTrRkJ67iTFveWELzEAwHaFW?pid=Api&P=0&h=180" alt="Student" class="rounded-full mr-4">
+                    <div>
+                        <h5 class="font-semibold">Rahul Sharma</h5>
+                        <p class="text-sm text-gray-500">Placed at Google</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition duration-300">
+                <p class="text-gray-600 italic mb-6">"The analytics helped me understand market trends. Highly recommend for all students."</p>
+                <div class="flex items-center justify-center">
+                    <img src="https://tse3.mm.bing.net/th/id/OIP.rnBsn9MzaWqKdC64e8FRjAHaHa?pid=Api&P=0&h=180" alt="Student" class="rounded-full mr-4">
+                    <div>
+                        <h5 class="font-semibold">Priya Patel</h5>
+                        <p class="text-sm text-gray-500">Placed at Microsoft</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition duration-300">
+                <p class="text-gray-600 italic mb-6">"As a coordinator, managing placements has never been easier. Great tool!"</p>
+                <div class="flex items-center justify-center">
+                    <img src="https://tse2.mm.bing.net/th/id/OIP.Ss6WE2QuN_yuExDN5ffzMwHaLu?pid=Api&P=0&h=180" alt="Coordinator" class="rounded-full mr-4">
+                    <div>
+                        <h5 class="font-semibold">Dr. Amit Kumar</h5>
+                        <p class="text-sm text-gray-500">T&P Coordinator</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="bg-gray-900 text-white py-12 px-6">
+    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+            <h3 class="font-bold text-lg mb-4">PCCOER Placement Portal</h3>
+            <p class="text-gray-400">Empowering students with opportunities for a brighter future.</p>
+        </div>
+        <div>
+            <h4 class="font-semibold mb-4">Quick Links</h4>
+            <ul class="space-y-2 text-gray-400">
+                <li><a href="HomePage.html" class="hover:text-white transition">Registration</a></li>
+                <li><a href="companies_list.html" class="hover:text-white transition">Companies</a></li>
+                <li><a href="analytics.html" class="hover:text-white transition">Stats</a></li>
+                <li><a href="http://127.0.0.1:5000" class="hover:text-white transition">Prediction</a></li>
+            </ul>
+        </div>
+        <div>
+            <h4 class="font-semibold mb-4">Contact</h4>
+            <p class="text-gray-400">Pimpri Chinchwad College of Engineering & Research<br>Ravet, Pune - 412101</p>
+            <p class="text-gray-400 mt-2">Email: placements@pccoer.ac.in</p>
+        </div>
+        <div>
+            <h4 class="font-semibold mb-4">Follow Us</h4>
+            <div class="flex space-x-4">
+                <a href="https://www.facebook.com/pccoerpune/about/" class="text-gray-400 hover:text-white transition"><i class="bi bi-facebook text-xl"></i></a>
+                <a href="https://www.youtube.com/@pimprichinchwadcollegeofen3296" class="text-gray-400 hover:text-white transition"><i class="bi bi-twitter text-xl"></i></a>
+                <a href="https://www.linkedin.com/company/pccoer-pcet/?originalSubdomain=in" class="text-gray-400 hover:text-white transition"><i class="bi bi-linkedin text-xl"></i></a>
+                <a href="https://www.instagram.com/pccoer__official/" class="text-gray-400 hover:text-white transition"><i class="bi bi-instagram text-xl"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= LOCATION/MAP SECTION ================= -->
+    <section class="py-24 px-6 bg-gradient-to-br from-white to-slate-50">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4 text-gray-900">Our Campus Location</h2>
+                <p class="text-gray-600 text-lg max-w-3xl mx-auto">
+                    Visit us at our state-of-the-art campus in Ravet, Pune - equipped with modern infrastructure
+                    to facilitate excellent placement opportunities for our students.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Map Container -->
+                <div class="rounded-2xl overflow-hidden shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-[1.02]">
+                    <div class="h-96 w-full">
+                        <iframe
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3780.917875500394!2d73.75050997493378!3d18.610940782497954!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2b9df5c5f61f5%3A0xf8d2e447d5a01c0e!2sPimpri%20Chinchwad%20College%20Of%20Engineering%20%26%20Research!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
+                                width="100%"
+                                height="230%"
+                                style="border:0;"
+                                allowfullscreen=""
+                                loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade"
+                                class="rounded-2xl">
+                        </iframe>
+                    </div>
+                </div>
+
+                <!-- Campus Information -->
+                <div class="glass-card rounded-3xl p-10 hover-lift">
+                    <div class="flex items-center gap-4 mb-8">
+                        <div class="icon-box bg-gradient-to-br from-blue-500 to-blue-700 text-white text-3xl">
+                            <i class="bi bi-geo-alt-fill"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-900">PCET's PCCOER Campus</h3>
+                            <p class="text-gray-600">Premier Engineering Institute in Pune</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div class="flex items-start gap-4">
+                            <i class="bi bi-geo text-blue-600 text-xl mt-1"></i>
+                            <div>
+                                <h4 class="font-semibold text-gray-900 mb-1">Address</h4>
+                                <p class="text-gray-600">
+                                    Sector No. 136,<br>
+                                    Mumbai - Pune Bypass Highway,<br>
+                                    Ravet, Pune - 412101,<br>
+                                    Maharashtra, India
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4">
+                            <i class="bi bi-telephone text-blue-600 text-xl mt-1"></i>
+                            <div>
+                                <h4 class="font-semibold text-gray-900 mb-1">Contact</h4>
+                                <p class="text-gray-600">
+                                    <span class="font-medium">Placement Cell:</span> +91-20-1234-5678<br>
+                                    <span class="font-medium">General Office:</span> +91-20-9876-5432
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4">
+                            <i class="bi bi-envelope text-blue-600 text-xl mt-1"></i>
+                            <div>
+                                <h4 class="font-semibold text-gray-900 mb-1">Email</h4>
+                                <p class="text-gray-600">
+                                    placements@pccoer.ac.in<br>
+                                    info@pccoer.ac.in
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4">
+                            <i class="bi bi-clock text-blue-600 text-xl mt-1"></i>
+                            <div>
+                                <h4 class="font-semibold text-gray-900 mb-1">Placement Office Hours</h4>
+                                <p class="text-gray-600">
+                                    Monday - Friday: 9:00 AM - 6:00 PM<br>
+                                    Saturday: 10:00 AM - 2:00 PM<br>
+                                    Sunday: Closed
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="pt-6 border-t">
+                            <h4 class="font-semibold text-gray-900 mb-3">How to Reach</h4>
+                            <div class="flex flex-wrap gap-3">
+                            <span class="px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+                                <i class="bi bi-bus-front mr-2"></i>PMC Buses
+                            </span>
+                                <span class="px-4 py-2 bg-green-100 text-green-700 rounded-full text-sm font-medium">
+                                <i class="bi bi-train-front mr-2"></i>Nearest Station: Chinchwad
+                            </span>
+                                <span class="px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">
+                                <i class="bi bi-car-front mr-2"></i>Ample Parking
+                            </span>
+                            </div>
+                        </div>
+
+                        <a href="https://maps.app.goo.gl/example"
+                           target="_blank"
+                           class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl font-semibold hover:shadow-lg transition duration-300 mt-4">
+                            <i class="bi bi-navigation"></i>
+                            Get Directions
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nearby Landmarks -->
+            <div class="mt-16 glass-card rounded-3xl p-8">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">Nearby Landmarks</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-gradient-to-br from-slate-50 to-white p-6 rounded-2xl shadow-md hover:shadow-lg transition duration-300">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
+                                <i class="bi bi-shop text-blue-600 text-xl"></i>
+                            </div>
+                            <h4 class="font-bold text-gray-900">Phoenix Marketcity</h4>
+                        </div>
+                        <p class="text-gray-600 text-sm">2.5 km from campus - Largest shopping mall in Pune</p>
+                    </div>
+
+                    <div class="bg-gradient-to-br from-slate-50 to-white p-6 rounded-2xl shadow-md hover:shadow-lg transition duration-300">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
+                                <i class="bi bi-hospital text-green-600 text-xl"></i>
+                            </div>
+                            <h4 class="font-bold text-gray-900">D.Y. Patil Hospital</h4>
+                        </div>
+                        <p class="text-gray-600 text-sm">3 km from campus - Multi-specialty hospital</p>
+                    </div>
+
+                    <div class="bg-gradient-to-br from-slate-50 to-white p-6 rounded-2xl shadow-md hover:shadow-lg transition duration-300">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center">
+                                <i class="bi bi-train-front text-purple-600 text-xl"></i>
+                            </div>
+                            <h4 class="font-bold text-gray-900">Chinchwad Railway Station</h4>
+                        </div>
+                        <p class="text-gray-600 text-sm">4 km from campus - Major railway station</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+        <p>&copy; 2025 PCCOER Placement Portal. All rights reserved. </p>
+    </div>
+</footer>
+
+</body>
+</html>

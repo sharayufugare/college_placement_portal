@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Student Dashboard — Companies</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root{
+          --accent:#1a73e8;
+          --bg:#eef2f7;
+          --card:#ffffff;
+          --muted:#6b7280;
+        }
+        body{
+          margin:0;
+          font-family: "Poppins", Arial, sans-serif;
+          background: var(--bg);
+          color:#111827;
+          padding:28px;
+        }
+        header{
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          gap:20px;
+          margin-bottom:18px;
+        }
+        .brand{
+          display:flex; align-items:center; gap:12px;
+        }
+        .brand h1{ margin:0; font-size:20px; color:var(--accent); }
+        .controls{
+          display:flex; gap:12px; align-items:center; flex-wrap:wrap;
+        }
+        .controls select, .controls input{
+          padding:8px 10px; border-radius:8px; border:1px solid #d1d5db; background:white;
+        }
+        .controls .small{ padding:6px 10px; font-size:13px; }
+        #logoutBtn{ background:#ef4444; color:white; border:none; padding:8px 12px; border-radius:8px; cursor:pointer;}
+        .layout{
+          display:grid;
+          grid-template-columns: 1fr 360px;
+          gap:20px;
+          margin-top:16px;
+        }
+
+        /* left: company list */
+        .company-list{
+          display:grid;
+          grid-template-columns: 1fr;
+          gap:14px;
+        }
+        .card{
+          background:var(--card);
+          border-radius:12px;
+          padding:16px;
+          box-shadow: 0 6px 18px rgba(17,24,39,0.06);
+          transition: transform .12s ease, box-shadow .12s ease;
+        }
+        .card:hover{ transform: translateY(-4px); box-shadow: 0 12px 30px rgba(17,24,39,0.09); }
+
+        .company-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:12px; }
+        .company-name{ font-size:16px; font-weight:700; color:var(--accent); margin-bottom:6px; }
+        .meta{ color:var(--muted); font-size:13px; margin-bottom:8px; }
+
+        .tags{ display:flex; flex-wrap:wrap; gap:6px; margin:8px 0; }
+        .tag{ font-size:12px; background:#e8f0fe; color:var(--accent); padding:6px 10px; border-radius:999px; }
+
+        .status{ padding:6px 10px; border-radius:12px; font-weight:600; font-size:13px; }
+        .status.open{ background:#dff6e8; color:#0b7a3e; }
+        .status.closed{ background:#fdecea; color:#9b1b1b; }
+
+        .card-footer{ display:flex; justify-content:space-between; align-items:center; gap:12px; margin-top:12px; }
+        .apply-btn{
+          background:var(--accent); color:white; border:none; padding:10px 14px; border-radius:10px; cursor:pointer; font-weight:600;
+        }
+        .apply-btn.disabled{ background:#cbd5e1; cursor:not-allowed; }
+
+        .reason{ font-size:13px; color:var(--muted); }
+
+        /* right: filters & profile */
+        .sidebar .box{ background:var(--card); padding:14px; border-radius:12px; box-shadow: 0 6px 18px rgba(17,24,39,0.04); margin-bottom:14px; }
+        .sidebar h3{ margin:0 0 8px 0; font-size:15px; }
+        .profile-row{ display:flex; gap:12px; align-items:center; }
+        .avatar{ width:56px; height:56px; border-radius:10px; background:#f3f4f6; display:flex; align-items:center; justify-content:center; color:var(--muted); font-weight:700; }
+        .muted{ color:var(--muted); font-size:13px; }
+
+        .no-results{ text-align:center; padding:24px; color:var(--muted); }
+
+        @media (max-width:980px){
+          .layout{ grid-template-columns: 1fr; }
+          .sidebar{ order:2; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="brand">
+        <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='36' height='36'><rect width='36' height='36' rx='8' fill='%231a73e8'/><text x='50%' y='58%' fill='white' font-size='18' font-family='Poppins' text-anchor='middle' dominant-baseline='middle'>T</text></rect></svg>" alt="logo" width="36" height="36">
+        <div>
+            <h1>TNP Portal — Student View</h1>
+            <div class="muted" id="welcomeSub">Companies & matches</div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <select id="filterBranch" class="small">
+            <option value="">All branches</option>
+            <option>IT</option>
+            <option>Computer</option>
+            <option>EXTC</option>
+            <option>Mechanical</option>
+            <option>Civil</option>
+        </select>
+
+        <input id="filterMinCgpa" type="number" min="0" step="0.01" placeholder="Min CGPA" class="small" style="width:110px"/>
+
+        <input id="filterSkill" type="text" placeholder="Filter skill (e.g. Java)" class="small"/>
+
+        <select id="filterStatus" class="small">
+            <option value="">Any Status</option>
+            <option value="Open">Open</option>
+            <option value="Closed">Closed</option>
+        </select>
+
+        <button id="clearFilters" class="small">Clear</button>
+
+        <button id="logoutBtn">Logout</button>
+    </div>
+</header>
+
+<div class="layout">
+    <div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px">
+            <h2 style="margin:0">Companies Hiring</h2>
+            <div class="muted" id="countInfo"></div>
+        </div>
+
+        <div id="companyList" class="company-list">
+            <!-- cards injected here -->
+        </div>
+
+    </div>
+
+    <aside class="sidebar">
+        <div class="box">
+            <h3>Your Profile</h3>
+            <div class="profile-row" id="profileBlock">
+                <div class="avatar" id="avatar">S</div>
+                <div>
+                    <div id="studentName" style="font-weight:700"></div>
+                    <div class="muted" id="studentMeta"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="box">
+            <h3>Quick Filters</h3>
+            <div style="display:flex; gap:10px; flex-direction:column;">
+                <label class="muted">Skill tags</label>
+                <div id="skillTags" style="display:flex; flex-wrap:wrap; gap:8px"></div>
+            </div>
+        </div>
+
+        <div class="box">
+            <h3>How eligibility works</h3>
+            <ol style="padding-left:18px; margin:0; color:var(--muted); font-size:14px">
+                <li>Student CGPA >= company criteria</li>
+                <li>At least one required skill must match</li>
+                <li>If company specifies branches (allowedBranches), branch must match</li>
+            </ol>
+        </div>
+    </aside>
+</div>
+
+<script src="api.js"></script>
+<script>
+    // Robust access to different naming (companyName / company_name / name)
+    function companyField(c, ...names) {
+      for (const n of names) {
+        if (c[n] !== undefined && c[n] !== null) return c[n];
+      }
+      return '';
+    }
+
+    function parseNumber(val) {
+      if (val === null || val === undefined) return NaN;
+      // remove non-digit except dot
+      const num = parseFloat((''+val).replace(/[^\d.]/g,''));
+      return isNaN(num) ? NaN : num;
+    }
+
+    function splitSkills(skillsRaw) {
+      if (!skillsRaw) return [];
+      if (Array.isArray(skillsRaw)) return skillsRaw.map(s => (''+s).trim()).filter(Boolean);
+      return (''+skillsRaw).split(/[,;|\/]/).map(s => s.trim()).filter(Boolean);
+    }
+
+    // compute eligibility
+    function isEligible(student, company) {
+      // company criteria may be string '7' or '7.0'
+      const compCrit = companyField(company,'criteria','eligibility','minCgpa') || companyField(company,'criteriaValue');
+      const compCritNum = parseNumber(compCrit);
+      const studentCgpa = parseNumber(student.cgpa || student.CGPA || student.cgpaStr || student.cgpaValue);
+
+      // if company has criteria and studentCgpa is NaN, treat not eligible
+      if (!isNaN(compCritNum)) {
+        if (isNaN(studentCgpa) || studentCgpa < compCritNum) return { ok:false, reason:`Requires CGPA ≥ ${compCritNum}` };
+      }
+
+      // skills
+      const studentSkills = splitSkills(student.skills || student.skillsRaw || student.skill || '');
+      const companySkills = splitSkills(companyField(company,'skills','requiredSkills','skillSet'));
+      // if company requires no skills, treat it as matching
+      if (companySkills.length>0) {
+        const intersection = companySkills.filter(s => studentSkills.some(ss => ss.toLowerCase() === s.toLowerCase()));
+        if (intersection.length === 0) return { ok:false, reason:`Skills mismatch (needs ${companySkills.join(', ')})` };
+      }
+
+      // branch allowed (optional)
+      const allowed = companyField(company,'allowedBranches','branches','branchAllowed');
+      if (allowed) {
+        const allowedList = splitSkills(allowed); // reuse splitter
+        const stuBranch = (student.branch || student.Branch || '').trim();
+        if (allowedList.length>0 && stuBranch && !allowedList.some(b=>b.toLowerCase()===stuBranch.toLowerCase())) {
+          return { ok:false, reason:`Not open for ${stuBranch} branch` };
+        }
+      }
+
+      // all checks passed
+      return { ok:true };
+    }
+
+    // render card
+    function renderCompanyCard(c, student) {
+      const id = companyField(c,'id','companyId','_id');
+      const name = companyField(c,'companyName','company_name','name') || '—';
+      const skills = companyField(c,'skills','requiredSkills') || '';
+      const criteria = companyField(c,'criteria','eligibility','minCgpa') || '—';
+      const status = (companyField(c,'status') || 'Open');
+
+      const eligibility = isEligible(student, c);
+
+      const skillsHtml = splitSkills(skills).map(s => `<span class="tag">${s}</span>`).join(' ');
+      const statusClass = (''+status).toLowerCase().includes('open') ? 'open' : 'closed';
+
+      // choose button label
+      let btnLabel = '';
+      let btnDisabled = false;
+      if (eligibility.ok && status.toLowerCase().includes('open')) {
+        btnLabel = 'Eligible · Apply';
+      } else if (!eligibility.ok) {
+        btnLabel = 'Not eligible';
+        btnDisabled = true;
+      } else {
+        btnLabel = 'View Details';
+      }
+
+      return `
+        <div class="card" data-id="${id}">
+          <div class="company-top">
+            <div>
+              <div class="company-name">${escapeHtml(name)}</div>
+              <div class="meta">${escapeHtml(c.description || c.role || '')}</div>
+            </div>
+            <div>
+              <div class="status ${statusClass}">${escapeHtml(status)}</div>
+              <div style="text-align:right; font-size:13px; color:var(--muted); margin-top:6px">Criteria: ${escapeHtml(criteria)}</div>
+            </div>
+          </div>
+
+          <div class="tags" style="margin-top:10px">${skillsHtml}</div>
+
+          <div class="card-footer">
+            <div class="reason">${btnDisabled ? eligibility.reason : '&nbsp;'}</div>
+            <div>
+              <button class="apply-btn ${btnDisabled ? 'disabled' : ''}"
+                ${btnDisabled ? 'disabled' : ''}
+                data-company-id="${id}"
+                data-company-name="${escapeHtml(name)}">
+                ${escapeHtml(btnLabel)}
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // small helpers
+    function escapeHtml(str){
+      if (!str && str !== 0) return '';
+      return (''+str).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
+    }
+
+    function escapeForAttr(s){
+      if (s === undefined || s === null) return '';
+      return (''+s).replaceAll("'","\\'").replaceAll('"','\\"');
+    }
+
+    // main load + filters
+    (async function main(){
+      const studentId = localStorage.getItem('studentId');
+      const token = localStorage.getItem('token');
+
+      if (!studentId || !token) {
+        // redirect to login if missing
+        window.location.href = '/student_login.html';
+        return;
+      }
+
+      const student = await getStudent(studentId);
+      if (!student) {
+        alert('Failed to load student profile. Please login again.');
+        localStorage.removeItem('token');
+        localStorage.removeItem('studentId');
+        window.location.href = '/student_login.html';
+        return;
+      }
+
+      // populate profile
+      document.getElementById('studentName').textContent = student.name || student.full_name || student.username || 'Student';
+      const meta = `${student.branch || ''} • Year ${student.year || ''} • CGPA ${student.cgpa || student.CGPA || '-'}`;
+      document.getElementById('studentMeta').textContent = meta;
+      document.getElementById('welcomeSub').textContent = `Welcome, ${ (student.name || student.full_name || 'Student') }`;
+
+      // small avatar
+      const avatarEl = document.getElementById('avatar');
+      if (student.photoPath || student.profile_img_url || student.photo_path) {
+        // show image
+        const url = student.photoPath || student.profile_img_url || student.photo_path;
+        avatarEl.style.backgroundImage = `url('${url}')`;
+        avatarEl.style.backgroundSize = 'cover';
+        avatarEl.textContent = '';
+      } else {
+        avatarEl.textContent = (student.name || student.full_name || 'S').slice(0,2).toUpperCase();
+      }
+
+      // skill tags quick view
+      const skillTags = splitSkills(student.skills || student.skills || '');
+      const skillTagsContainer = document.getElementById('skillTags');
+      skillTagsContainer.innerHTML = skillTags.length ? skillTags.map(s => `<span class="tag">${escapeHtml(s)}</span>`).join(' ') : '<div class="muted">No skills listed</div>';
+
+      // load companies once and keep in memory
+      let companies = await getCompanies();
+
+      const listEl = document.getElementById('companyList');
+      const countInfo = document.getElementById('countInfo');
+
+      function applyFiltersAndRender(){
+        const branch = document.getElementById('filterBranch').value.trim();
+        const minCgpa = parseNumber(document.getElementById('filterMinCgpa').value);
+        const skillFilter = document.getElementById('filterSkill').value.trim().toLowerCase();
+        const statusFilter = document.getElementById('filterStatus').value;
+
+        let filtered = companies.slice();
+
+        if (branch) {
+          filtered = filtered.filter(c => {
+            const allowed = companyField(c,'allowedBranches','branches','branchAllowed');
+            if (!allowed) return true; // company doesn't restrict
+            const list = splitSkills(allowed).map(x=>x.toLowerCase());
+            return list.includes(branch.toLowerCase());
+          });
+        }
+
+        if (!isNaN(minCgpa) && minCgpa>0) {
+          filtered = filtered.filter(c => {
+            const crit = parseNumber(companyField(c,'criteria','eligibility','minCgpa'));
+            return isNaN(crit) ? true : crit <= minCgpa; // show companies with criteria <= selected min
+          });
+        }
+
+        if (skillFilter) {
+          filtered = filtered.filter(c => {
+            const skills = splitSkills(companyField(c,'skills','requiredSkills')).map(s=>s.toLowerCase());
+            return skills.some(s => s.includes(skillFilter));
+          });
+        }
+
+        if (statusFilter) {
+          filtered = filtered.filter(c => (''+companyField(c,'status')).toLowerCase() === statusFilter.toLowerCase());
+        }
+
+        // render
+        if (filtered.length === 0) {
+          listEl.innerHTML = `<div class="card no-results">No companies found for selected filters.</div>`;
+          countInfo.textContent = '0 companies';
+          return;
+        }
+
+        listEl.innerHTML = filtered.map(c => renderCompanyCard(c, student)).join('');
+        countInfo.textContent = `${filtered.length} companies`;
+
+        // Add event listeners to apply buttons after rendering
+        document.querySelectorAll(".apply-btn").forEach(btn => {
+          btn.addEventListener("click", async () => {
+            if (btn.classList.contains("disabled")) return;
+
+            const companyId = btn.dataset.companyId;
+            const companyName = btn.dataset.companyName;
+
+           // alert("BUTTON CLICK JS TAK PAHUNCH GAYA 😭🔥");
+
+            await onApplyClick(companyId, companyName);
+          });
+        });
+      }
+
+      // wire filters
+      document.getElementById('filterBranch').addEventListener('change', applyFiltersAndRender);
+      document.getElementById('filterMinCgpa').addEventListener('input', applyFiltersAndRender);
+      document.getElementById('filterSkill').addEventListener('input', () => { setTimeout(applyFiltersAndRender, 200); });
+      document.getElementById('filterStatus').addEventListener('change', applyFiltersAndRender);
+      document.getElementById('clearFilters').addEventListener('click', () => {
+        document.getElementById('filterBranch').value = '';
+        document.getElementById('filterMinCgpa').value = '';
+        document.getElementById('filterSkill').value = '';
+        document.getElementById('filterStatus').value = '';
+        applyFiltersAndRender();
+      });
+
+      document.getElementById('logoutBtn').addEventListener('click', () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('studentId');
+        window.location.href = '/student_login.html';
+      });
+
+      // expose handler for button clicks
+      window.onApplyClick = async function(companyId, companyName) {
+        //alert("CLIck ho gaya");
+        // compute eligiblity again for safety
+        const comp = companies.find(x => (x.id==companyId || x.companyId==companyId || x._id==companyId));
+        if (!comp) {
+          alert('Company not found');
+          return;
+        }
+        const elig = isEligible(student, comp);
+        if (!elig.ok) {
+          alert('You are not eligible: ' + elig.reason);
+          return;
+        }
+        // If company closed, prevent apply
+        const status = (companyField(comp,'status') || '').toLowerCase();
+        if (status && !status.includes('open')) {
+          alert('This company is currently not open for applications.');
+          return;
+        }
+
+        // Do an apply POST (backend route optional)
+        const studId = localStorage.getItem('studentId');
+        const res = await applyToCompany(studId, companyId);
+        if (res.ok) {
+          alert('Applied to ' + (companyName || 'company') + ' successfully! 🎉');
+        } else {
+          // If backend not implemented, fall back to client success + suggestion
+          if (res.status === 404 || res.status === 405) {
+            alert('Application endpoint not found on server. Frontend marks as applied locally (demo).');
+            // Optionally mark card UI as applied
+          } else {
+            alert('Failed to apply: ' + (res.data?.message || res.rawText || 'Server error'));
+          }
+        }
+      };
+
+      // initial render
+      applyFiltersAndRender();
+
+    })();
+
+
+    async function applyToCompany(studentId, companyId) {
+    try {
+        const res = await fetch(
+            `http://localhost:8080/student/apply/${companyId}?studentId=${studentId}`,
+            {
+                method: "POST",
+                headers: {
+                    "Authorization": "Bearer " + localStorage.getItem("token")
+                }
+            }
+        );
+
+        return {
+            ok: res.ok,
+            status: res.status,
+            rawText: await res.text()
+        };
+
+    } catch (error) {
+        console.error("Apply error:", error);
+        return { ok: false, rawText: "Network error" };
+    }
+}
+
+</script>
+</body>
+</html>

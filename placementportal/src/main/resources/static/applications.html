@@ -1,0 +1,671 @@
+<!--<!DOCTYPE html>
+<html>
+<head>
+    <title>Applications</title>
+    <style>
+        table { width:100%; border-collapse: collapse; }
+        th, td { border:1px solid #ccc; padding:8px; text-align:left; }
+        th { background:#1a73e8; color:white; }
+    </style>
+</head>
+<body>
+
+<h2>Student Applications</h2>
+
+<table>
+    <thead>
+    <tr>
+        <th>Student Name</th>
+        <th>Company</th>
+        <th>Status</th>
+        <th>Applied Date</th>
+    </tr>
+    </thead>
+    <tbody id="appTable"></tbody>
+</table>
+
+<script>
+    fetch("http://localhost:8080/tnp/applications")
+      .then(res => res.json())
+      .then(data => {
+        const tbody = document.getElementById("appTable");
+        data.forEach(app => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${app.student.name}</td>
+            <td>${app.company.companyName}</td>
+            <td>${app.status}</td>
+            <td>${app.appliedDate}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      });
+</script>
+
+</body>
+</html>  -->
+<!--<!DOCTYPE html>
+<html>
+<head>
+    <title>Applications</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        h2 { color: #333; margin-bottom: 20px; }
+        table {
+            width:100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            border:1px solid #ddd;
+            padding:12px 15px;
+            text-align:left;
+        }
+        th {
+            background:#1a73e8;
+            color:white;
+            font-weight: 600;
+        }
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        tr:hover {
+            background: #f1f7ff;
+        }
+        .loading, .error, .empty {
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            font-style: italic;
+        }
+        .error {
+            color: #d32f2f;
+            background: #ffebee;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Student Applications</h2>
+
+<div id="statusMessage"></div>
+
+<table>
+    <thead>
+    <tr>
+        <th>Student Name</th>
+        <th>Company</th>
+        <th>Status</th>
+        <th>Applied Date</th>
+    </tr>
+    </thead>
+    <tbody id="appTable">
+    <tr>
+        <td colspan="4" class="loading">Loading applications...</td>
+    </tr>
+    </tbody>
+</table>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const tbody = document.getElementById("appTable");
+        const statusMessage = document.getElementById("statusMessage");
+
+        // Show loading state
+        tbody.innerHTML = `<tr><td colspan="4" class="loading">Loading applications...</td></tr>`;
+
+        fetch("http://localhost:8080/tnp/applications")
+            .then(res => {
+                console.log('Response status:', res.status);
+
+                if (!res.ok) {
+                    throw new Error(`HTTP error! Status: ${res.status}`);
+                }
+
+                // Try to parse as JSON
+                const contentType = res.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    throw new Error('Response is not JSON');
+                }
+
+                return res.json();
+            })
+            .then(data => {
+                console.log('Received data:', data);
+
+                if (!data || data.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="4" class="empty">No applications found.</td></tr>`;
+                    return;
+                }
+
+                // Clear loading message
+                tbody.innerHTML = '';
+
+                data.forEach(app => {
+                    const tr = document.createElement("tr");
+
+                    // Use safe property access with fallbacks
+                    const studentName = app.student?.name ||
+                                       app.studentName ||
+                                       app.student?.full_name ||
+                                       'Unknown Student';
+
+                    const companyName = app.company?.companyName ||
+                                       app.company?.name ||
+                                       app.companyName ||
+                                       'Unknown Company';
+
+                    const status = app.status || 'Pending';
+                    const appliedDate = app.appliedDate ||
+                                       app.dateApplied ||
+                                       app.createdAt ||
+                                       'N/A';
+
+                    tr.innerHTML = `
+                        <td>${escapeHtml(studentName)}</td>
+                        <td>${escapeHtml(companyName)}</td>
+                        <td>${escapeHtml(status)}</td>
+                        <td>${escapeHtml(appliedDate)}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching applications:', error);
+
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="4" class="error">
+                            Error loading applications. Details: ${escapeHtml(error.message)}
+                        </td>
+                    </tr>
+                `;
+
+                // Show additional troubleshooting info
+                statusMessage.innerHTML = `
+                    <div class="error">
+                        <strong>Troubleshooting tips:</strong><br>
+                        1. Make sure the backend server is running on http://localhost:8080<br>
+                        2. Check if the endpoint /tnp/applications exists<br>
+                        3. Verify CORS is properly configured on the server<br>
+                        4. Check browser console for more details (F12 > Console)
+                    </div>
+                `;
+            });
+    });
+
+    function escapeHtml(str) {
+        if (str === null || str === undefined) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+</script>
+
+</body>
+</html>
+-->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Applications</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+        select {
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            background: white;
+            font-size: 14px;
+        }
+        table {
+            width:100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            border:1px solid #ddd;
+            padding:12px 15px;
+            text-align:left;
+        }
+        th {
+            background:#1a73e8;
+            color:white;
+            font-weight: 600;
+        }
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        tr:hover {
+            background: #f1f7ff;
+        }
+        .loading, .error, .empty {
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            font-style: italic;
+        }
+        .error {
+            color: #d32f2f;
+            background: #ffebee;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        .btn-accept, .btn-reject {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            min-width: 60px;
+        }
+        .btn-accept {
+            background: #28a745;
+            color: white;
+        }
+        .btn-accept:hover {
+            background: #218838;
+        }
+        .btn-reject {
+            background: #dc3545;
+            color: white;
+        }
+        .btn-reject:hover {
+            background: #c82333;
+        }
+        .btn-accept:disabled, .btn-reject:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+        .status-pending {
+            color: #ffc107;
+            font-weight: 600;
+        }
+        .status-accepted {
+            color: #28a745;
+            font-weight: 600;
+        }
+        .status-rejected {
+            color: #dc3545;
+            font-weight: 600;
+        }
+        .sort-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .btn-tick {
+            background: #28a745 !important;
+            color: white;
+            font-size: 16px;
+            cursor: default !important;
+        }
+        .btn-cross {
+            background: #dc3545 !important;
+            color: white;
+            font-size: 16px;
+            cursor: default !important;
+        }
+        .rejection-message {
+            font-size: 12px;
+            color: #dc3545;
+            background: #ffe6e6;
+            padding: 5px 10px;
+            border-radius: 4px;
+            margin-top: 5px;
+            font-style: italic;
+        }
+        .status-updated {
+            animation: statusPulse 0.5s ease-in-out 2;
+        }
+        @keyframes statusPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+<h2>Student Applications
+    <div class="sort-control">
+        <span>Sort by:</span>
+        <select id="sortSelect">
+            <option value="company-asc">Company Name (A-Z)</option>
+            <option value="company-desc">Company Name (Z-A)</option>
+            <option value="date-asc">Date (Oldest First)</option>
+            <option value="date-desc">Date (Newest First)</option>
+            <option value="status">Status</option>
+            <option value="student-asc">Student Name (A-Z)</option>
+            <option value="student-desc">Student Name (Z-A)</option>
+        </select>
+    </div>
+</h2>
+
+<div id="statusMessage"></div>
+
+<table>
+    <thead>
+    <tr>
+        <th>Student Name</th>
+        <th>Company</th>
+        <th>Status</th>
+        <th>Applied Date</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody id="appTable">
+    <tr>
+        <td colspan="5" class="loading">Loading applications...</td>
+    </tr>
+    </tbody>
+</table>
+
+<script>
+    let applicationsData = [];
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const tbody = document.getElementById("appTable");
+        const statusMessage = document.getElementById("statusMessage");
+        const sortSelect = document.getElementById("sortSelect");
+
+        tbody.innerHTML = `<tr><td colspan="5" class="loading">Loading applications...</td></tr>`;
+
+        fetch("http://localhost:8080/tnp/applications")
+            .then(res => {
+                console.log('Response status:', res.status);
+
+                if (!res.ok) {
+                    throw new Error(`HTTP error! Status: ${res.status}`);
+                }
+
+                const contentType = res.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    throw new Error('Response is not JSON');
+                }
+
+                return res.json();
+            })
+            .then(data => {
+                console.log('Received data:', data);
+
+                if (!data || data.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="5" class="empty">No applications found.</td></tr>`;
+                    return;
+                }
+
+                applicationsData = data;
+                renderApplications(applicationsData);
+            })
+            .catch(error => {
+                console.error('Error fetching applications:', error);
+
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="error">
+                            Error loading applications. Details: ${escapeHtml(error.message)}
+                        </td>
+                    </tr>
+                `;
+
+                statusMessage.innerHTML = `
+                    <div class="error">
+                        <strong>Troubleshooting tips:</strong><br>
+                        1. Make sure the backend server is running on http://localhost:8080<br>
+                        2. Check if the endpoint /tnp/applications exists<br>
+                        3. Verify CORS is properly configured on the server<br>
+                        4. Check browser console for more details (F12 > Console)
+                    </div>
+                `;
+            });
+
+        sortSelect.addEventListener('change', function() {
+            if (applicationsData.length > 0) {
+                const sortedData = sortApplications([...applicationsData], this.value);
+                renderApplications(sortedData);
+            }
+        });
+    });
+
+    function renderApplications(data) {
+        const tbody = document.getElementById("appTable");
+        tbody.innerHTML = '';
+
+        data.forEach(app => {
+            const tr = document.createElement("tr");
+
+            const studentName = app.student?.name ||
+                               app.studentName ||
+                               app.student?.full_name ||
+                               'Unknown Student';
+
+            const companyName = app.company?.companyName ||
+                               app.company?.name ||
+                               app.companyName ||
+                               'Unknown Company';
+
+            const status = app.status || 'Pending';
+            const appliedDate = app.appliedDate ||
+                               app.dateApplied ||
+                               app.createdAt ||
+                               'N/A';
+
+            let statusClass = 'status-pending';
+            if (status.toLowerCase().includes('accept') || status.toLowerCase().includes('approved')) {
+                statusClass = 'status-accepted';
+            } else if (status.toLowerCase().includes('reject') || status.toLowerCase().includes('denied')) {
+                statusClass = 'status-rejected';
+            }
+
+            const isDisabled = status.toLowerCase() !== 'pending';
+            const isAccepted = status.toLowerCase().includes('accept') || status.toLowerCase().includes('approved');
+            const isRejected = status.toLowerCase().includes('reject') || status.toLowerCase().includes('denied');
+            const appId = app.id || app.applicationId || app._id;
+
+            tr.innerHTML = `
+                <td>${escapeHtml(studentName)}</td>
+                <td>${escapeHtml(companyName)}</td>
+                <td class="${statusClass}">${escapeHtml(status)}</td>
+                <td>${escapeHtml(appliedDate)}</td>
+                <td>
+                    <div class="action-buttons">
+                        ${isAccepted ?
+                            `<button class="btn-accept btn-tick" disabled>✓</button>` :
+                            `<button class="btn-accept"
+                                ${isDisabled ? 'disabled' : ''}
+                                onclick="handleAccept('${escapeHtml(appId)}', '${escapeHtml(studentName)}', this)">
+                                Accept
+                            </button>`
+                        }
+                        ${isRejected ?
+                            `<button class="btn-reject btn-cross" disabled>✗</button>` :
+                            `<button class="btn-reject"
+                                ${isDisabled ? 'disabled' : ''}
+                                onclick="handleReject('${escapeHtml(appId)}', '${escapeHtml(studentName)}', this)">
+                                Reject
+                            </button>`
+                        }
+                    </div>
+                    ${isRejected ? `<div class="rejection-message">Application rejected - Message sent to student</div>` : ''}
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function sortApplications(data, sortBy) {
+        return data.sort((a, b) => {
+            const studentNameA = (a.student?.name || a.studentName || '').toLowerCase();
+            const studentNameB = (b.student?.name || b.studentName || '').toLowerCase();
+            const companyNameA = (a.company?.companyName || a.company?.name || a.companyName || '').toLowerCase();
+            const companyNameB = (b.company?.companyName || b.company?.name || b.companyName || '').toLowerCase();
+            const dateA = new Date(a.appliedDate || a.dateApplied || a.createdAt || 0);
+            const dateB = new Date(b.appliedDate || b.dateApplied || b.createdAt || 0);
+            const statusA = (a.status || 'pending').toLowerCase();
+            const statusB = (b.status || 'pending').toLowerCase();
+
+            switch(sortBy) {
+                case 'company-asc':
+                    return companyNameA.localeCompare(companyNameB);
+                case 'company-desc':
+                    return companyNameB.localeCompare(companyNameA);
+                case 'date-asc':
+                    return dateA - dateB;
+                case 'date-desc':
+                    return dateB - dateA;
+                case 'status':
+                    return statusA.localeCompare(statusB);
+                case 'student-asc':
+                    return studentNameA.localeCompare(studentNameB);
+                case 'student-desc':
+                    return studentNameB.localeCompare(studentNameA);
+                default:
+                    return 0;
+            }
+        });
+    }
+
+    function handleAccept(applicationId, studentName, buttonElement) {
+        if (!confirm(`Accept application from ${studentName}?`)) {
+            return;
+        }
+
+        const row = buttonElement.closest('tr');
+        const acceptBtn = row.querySelector('.btn-accept');
+        const rejectBtn = row.querySelector('.btn-reject');
+
+        acceptBtn.textContent = 'Processing...';
+        acceptBtn.disabled = true;
+        if (rejectBtn) rejectBtn.disabled = true;
+
+        setTimeout(() => {
+            const appIndex = applicationsData.findIndex(app =>
+                (app.id || app.applicationId || app._id) === applicationId
+            );
+
+            if (appIndex !== -1) {
+                applicationsData[appIndex].status = 'Accepted';
+
+                const statusCell = row.cells[2];
+                statusCell.textContent = 'Accepted';
+                statusCell.className = 'status-accepted status-updated';
+
+                const actionCell = row.cells[4];
+                actionCell.innerHTML = `
+                    <div class="action-buttons">
+                        <button class="btn-accept btn-tick" disabled>✓</button>
+                    </div>
+                `;
+
+                setTimeout(() => {
+                    statusCell.classList.remove('status-updated');
+                }, 1000);
+
+                alert(`Application from ${studentName} has been accepted.`);
+            }
+        }, 500);
+    }
+
+    function handleReject(applicationId, studentName, buttonElement) {
+        const rejectionReason = prompt(`Reject application from ${studentName}. Please enter rejection reason:`,
+                                      "We regret to inform you that your application has been rejected due to high competition.");
+
+        if (rejectionReason === null) {
+            return;
+        }
+
+        const row = buttonElement.closest('tr');
+        const rejectBtn = row.querySelector('.btn-reject');
+        const acceptBtn = row.querySelector('.btn-accept');
+
+        rejectBtn.textContent = 'Processing...';
+        rejectBtn.disabled = true;
+        if (acceptBtn) acceptBtn.disabled = true;
+
+        setTimeout(() => {
+            const appIndex = applicationsData.findIndex(app =>
+                (app.id || app.applicationId || app._id) === applicationId
+            );
+
+            if (appIndex !== -1) {
+                applicationsData[appIndex].status = 'Rejected';
+
+                const statusCell = row.cells[2];
+                statusCell.textContent = 'Rejected';
+                statusCell.className = 'status-rejected status-updated';
+
+                const actionCell = row.cells[4];
+                actionCell.innerHTML = `
+                    <div class="action-buttons">
+                        <button class="btn-reject btn-cross" disabled>✗</button>
+                    </div>
+                    <div class="rejection-message">Application rejected - Message sent to student</div>
+                `;
+
+                setTimeout(() => {
+                    statusCell.classList.remove('status-updated');
+                }, 1000);
+
+                alert(`Application from ${studentName} has been rejected.\n\nRejection reason sent:\n"${rejectionReason}"`);
+
+                console.log(`Rejection message sent to ${studentName}: "${rejectionReason}"`);
+            }
+        }, 500);
+    }
+
+    function escapeHtml(str) {
+        if (str === null || str === undefined) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+</script>
+
+</body>
+</html>

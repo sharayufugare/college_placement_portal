@@ -1,0 +1,821 @@
+<!--<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Dashboard</title>
+</head>
+
+<body>
+
+<h2>Student Dashboard</h2>
+
+<div id="profile"></div>
+
+<h3>Upload Resume</h3>
+<input type="file" id="resumeFile">
+<button onclick="uploadResume()">Upload</button>
+
+<h3>Upload Photo</h3>
+<input type="file" id="photoFile">
+<button onclick="uploadPhoto()">Upload</button>
+
+<hr>
+
+<h3>Update Profile</h3>
+
+<input id="name" placeholder="Full Name"><br><br>
+<input id="skills" placeholder="Skills"><br><br>
+<input id="criteria" placeholder="Criteria"><br><br>
+<input id="cgpa" placeholder="CGPA"><br><br>
+<input id="branch" placeholder="Branch"><br><br>
+<input id="year" placeholder="Year"><br><br>
+<input id="phone" placeholder="Phone"><br><br>
+<input id="linkedin" placeholder="LinkedIn"><br><br>
+<input id="github" placeholder="GitHub"><br><br>
+<input id="gender" placeholder="Gender"><br><br>
+<input id="achievements" placeholder="Achievements"><br><br>
+
+<button onclick="updateProfile()">Save Changes</button>
+
+<script>
+    const studentId = localStorage.getItem("studentId");
+
+    // LOAD PROFILE
+    async function loadProfile() {
+        let res = await fetch("/student/dashboard/" + studentId);
+        let data = await res.json();
+
+        document.getElementById("profile").innerHTML = `
+            <p><b>Name:</b> ${data.name}</p>
+            <p><b>Email:</b> ${data.email}</p>
+            <p><b>Skills:</b> ${data.skills}</p>
+            <p><b>CGPA:</b> ${data.cgpa}</p>
+            <p><b>Resume:</b> ${data.resumePath}</p>
+            <p><b>Photo:</b> ${data.photoPath}</p>
+        `;
+
+        document.getElementById("name").value = data.name || "";
+        document.getElementById("skills").value = data.skills || "";
+        document.getElementById("criteria").value = data.criteria || "";
+        document.getElementById("cgpa").value = data.cgpa || "";
+        document.getElementById("branch").value = data.branch || "";
+        document.getElementById("year").value = data.year || "";
+        document.getElementById("phone").value = data.phone || "";
+        document.getElementById("linkedin").value = data.linkedin || "";
+        document.getElementById("github").value = data.github || "";
+        document.getElementById("gender").value = data.gender || "";
+        document.getElementById("achievements").value = data.achievements || "";
+    }
+
+    loadProfile();
+
+
+    // UPDATE PROFILE
+    async function updateProfile() {
+        let payload = {
+            name: document.getElementById("name").value,
+            skills: document.getElementById("skills").value,
+            criteria: document.getElementById("criteria").value,
+            cgpa: document.getElementById("cgpa").value,
+            branch: document.getElementById("branch").value,
+            year: document.getElementById("year").value,
+            phone: document.getElementById("phone").value,
+            linkedin: document.getElementById("linkedin").value,
+            github: document.getElementById("github").value,
+            gender: document.getElementById("gender").value,
+            achievements: document.getElementById("achievements").value,
+        };
+
+        await fetch("/student/update/" + studentId, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+
+        alert("Profile updated!");
+        loadProfile();
+    }
+
+
+    // UPLOAD RESUME
+    async function uploadResume() {
+        let file = document.getElementById("resumeFile").files[0];
+        let fd = new FormData();
+        fd.append("file", file);
+
+        let res = await fetch(`/student/uploadResume/${studentId}`, {
+            method: "POST",
+            body: fd
+        });
+
+        alert(await res.text());
+        loadProfile();
+    }
+
+
+    // UPLOAD PHOTO
+    async function uploadPhoto() {
+        let file = document.getElementById("photoFile").files[0];
+        let fd = new FormData();
+        fd.append("file", file);
+
+        let res = await fetch(`/student/uploadPhoto/${studentId}`, {
+            method: "POST",
+            body: fd
+        });
+
+        alert(await res.text());
+        loadProfile();
+    }
+</script>
+
+</body>
+</html>-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - PCCOER</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --accent: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4bb543;
+            --warning: #ffcc00;
+            --danger: #dc3545;
+            --gray: #6c757d;
+            --border-radius: 10px;
+            --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .dashboard-header {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 20px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-header h1 {
+            color: var(--primary);
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dashboard-header h1 i {
+            color: var(--secondary);
+        }
+
+        .logout-btn {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logout-btn:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .dashboard-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 25px;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .card-header h2 {
+            color: var(--secondary);
+            font-size: 22px;
+        }
+
+        .card-header i {
+            color: var(--primary);
+            font-size: 24px;
+        }
+
+        .profile-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .info-item {
+            margin-bottom: 15px;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: var(--gray);
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 16px;
+            color: var(--dark);
+        }
+
+        .upload-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .upload-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: var(--border-radius);
+        }
+
+        .upload-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .upload-content {
+            flex: 1;
+        }
+
+        .upload-content h4 {
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+
+        .upload-content p {
+            color: var(--gray);
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-label {
+            background: var(--primary);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: var(--transition);
+            display: inline-block;
+        }
+
+        .file-label:hover {
+            background: var(--secondary);
+        }
+
+        .upload-btn {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .upload-btn:hover {
+            background: #3a9c35;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 576px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--gray);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(76, 201, 240, 0.2);
+        }
+
+        .save-btn {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .save-btn:hover {
+            background: #3a9c35;
+            transform: translateY(-2px);
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .status-complete {
+            background: #e8f5e9;
+            color: var(--success);
+        }
+
+        .status-pending {
+            background: #fff3e0;
+            color: #ff9800;
+        }
+    </style>
+</head>
+
+<body>
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h1><i class="fas fa-user-graduate"></i> Student Dashboard</h1>
+
+        <div style="display:flex; gap:10px;">
+            <button class="logout-btn" onclick="window.location.href='student-application.html'">
+                <i class="fas fa-building"></i> Applications
+            </button>
+
+            <button class="logout-btn" onclick="window.location.href='companies.html'">
+                <i class="fas fa-building"></i> View Companies
+            </button>
+
+            <button class="logout-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </div>
+
+
+    <div class="alert alert-success" id="successAlert"></div>
+    <div class="alert alert-error" id="errorAlert"></div>
+
+    <div class="dashboard-content">
+        <!-- Profile Information Card -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-id-card"></i>
+                <h2>Profile Information</h2>
+            </div>
+            <div id="profile" class="profile-info">
+                <!-- Profile data will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Upload Section Card -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <h2>Upload Documents</h2>
+            </div>
+            <div class="upload-section">
+                <div class="upload-item">
+                    <div class="upload-icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <div class="upload-content">
+                        <h4>Upload Resume</h4>
+                        <p>PDF format, max 5MB</p>
+                        <input type="file" id="resumeFile" class="file-input" accept=".pdf">
+                        <label for="resumeFile" class="file-label">Choose File</label>
+                        <button class="upload-btn" onclick="uploadResume()">Upload</button>
+                    </div>
+                </div>
+
+                <div class="upload-item">
+                    <div class="upload-icon">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <div class="upload-content">
+                        <h4>Upload Photo</h4>
+                        <p>JPG or PNG, max 2MB</p>
+                        <input type="file" id="photoFile" class="file-input" accept=".jpg,.jpeg,.png">
+                        <label for="photoFile" class="file-label">Choose File</label>
+                        <button class="upload-btn" onclick="uploadPhoto()">Upload</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Update Profile Card -->
+        <div class="card full-width">
+            <div class="card-header">
+                <i class="fas fa-edit"></i>
+                <h2>Update Profile</h2>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" class="form-control" placeholder="Enter your full name">
+                </div>
+
+                <div class="form-group">
+                    <label for="skills">Skills</label>
+                    <input type="text" id="skills" class="form-control" placeholder="e.g. Java, Python, React">
+                </div>
+
+                <div class="form-group">
+                    <label for="criteria">Criteria</label>
+                    <input type="text" id="criteria" class="form-control" placeholder="Academic criteria">
+                </div>
+
+                <div class="form-group">
+                    <label for="cgpa">CGPA</label>
+                    <input type="number" id="cgpa" class="form-control" placeholder="Enter your CGPA" step="0.01" min="0" max="10">
+                </div>
+
+                <div class="form-group">
+                    <label for="branch">Branch</label>
+                    <input type="text" id="branch" class="form-control" placeholder="Your branch">
+                </div>
+
+                <div class="form-group">
+                    <label for="year">Year</label>
+                    <input type="text" id="year" class="form-control" placeholder="Current academic year">
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone</label>
+                    <input type="tel" id="phone" class="form-control" placeholder="Your phone number">
+                </div>
+
+                <div class="form-group">
+                    <label for="linkedin">LinkedIn</label>
+                    <input type="url" id="linkedin" class="form-control" placeholder="LinkedIn profile URL">
+                </div>
+
+                <div class="form-group">
+                    <label for="github">GitHub</label>
+                    <input type="url" id="github" class="form-control" placeholder="GitHub profile URL">
+                </div>
+
+                <div class="form-group">
+                    <label for="gender">Gender</label>
+                    <input type="text" id="gender" class="form-control" placeholder="Your gender">
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="achievements">Achievements</label>
+                    <textarea id="achievements" class="form-control" placeholder="List your achievements" rows="3"></textarea>
+                </div>
+            </div>
+
+            <button class="save-btn" onclick="updateProfile()">
+                <i class="fas fa-save"></i> Save Changes
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const studentId = localStorage.getItem("studentId");
+
+    // Check if user is logged in
+    if (!studentId) {
+        window.location.href = "login.html";
+    }
+
+    // LOAD PROFILE
+    async function loadProfile() {
+        try {
+            let res = await fetch("/student/dashboard/" + studentId);
+            let data = await res.json();
+
+            document.getElementById("profile").innerHTML = `
+                <div class="info-item">
+                    <div class="info-label">Name</div>
+                    <div class="info-value">${data.name || 'Not provided'}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Email</div>
+                    <div class="info-value">${data.email || 'Not provided'}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Skills</div>
+                    <div class="info-value">${data.skills || 'Not provided'}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">CGPA</div>
+                    <div class="info-value">${data.cgpa || 'Not provided'}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Resume</div>
+                    <div class="info-value">
+                        ${data.resumePath ?
+                            `<span class="status-badge status-complete">Uploaded</span>` :
+                            `<span class="status-badge status-pending">Not Uploaded</span>`}
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Photo</div>
+                    <div class="info-value">
+                        ${data.photoPath ?
+                            `<span class="status-badge status-complete">Uploaded</span>` :
+                            `<span class="status-badge status-pending">Not Uploaded</span>`}
+                    </div>
+                </div>
+            `;
+
+            // Fill form fields
+            document.getElementById("name").value = data.name || "";
+            document.getElementById("skills").value = data.skills || "";
+            document.getElementById("criteria").value = data.criteria || "";
+            document.getElementById("cgpa").value = data.cgpa || "";
+            document.getElementById("branch").value = data.branch || "";
+            document.getElementById("year").value = data.year || "";
+            document.getElementById("phone").value = data.phone || "";
+            document.getElementById("linkedin").value = data.linkedin || "";
+            document.getElementById("github").value = data.github || "";
+            document.getElementById("gender").value = data.gender || "";
+            document.getElementById("achievements").value = data.achievements || "";
+        } catch (error) {
+            showError("Failed to load profile data");
+        }
+    }
+
+    loadProfile();
+
+    // UPDATE PROFILE
+    async function updateProfile() {
+        try {
+            let payload = {
+                name: document.getElementById("name").value,
+                skills: document.getElementById("skills").value,
+                criteria: document.getElementById("criteria").value,
+                cgpa: document.getElementById("cgpa").value,
+                branch: document.getElementById("branch").value,
+                year: document.getElementById("year").value,
+                phone: document.getElementById("phone").value,
+                linkedin: document.getElementById("linkedin").value,
+                github: document.getElementById("github").value,
+                gender: document.getElementById("gender").value,
+                achievements: document.getElementById("achievements").value,
+            };
+
+            let res = await fetch("/student/update/" + studentId, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+
+            if (res.ok) {
+                showSuccess("Profile updated successfully!");
+                loadProfile();
+            } else {
+                showError("Failed to update profile");
+            }
+        } catch (error) {
+            showError("Network error. Please try again.");
+        }
+    }
+
+    // UPLOAD RESUME
+    async function uploadResume() {
+        let fileInput = document.getElementById("resumeFile");
+        let file = fileInput.files[0];
+
+        if (!file) {
+            showError("Please select a file to upload");
+            return;
+        }
+
+        if (file.type !== "application/pdf") {
+            showError("Please upload a PDF file");
+            return;
+        }
+
+        if (file.size > 5 * 1024 * 1024) {
+            showError("File size must be less than 5MB");
+            return;
+        }
+
+        let fd = new FormData();
+        fd.append("file", file);
+
+        try {
+            let res = await fetch(`/student/uploadResume/${studentId}`, {
+                method: "POST",
+                body: fd
+            });
+
+            if (res.ok) {
+                showSuccess("Resume uploaded successfully!");
+                fileInput.value = "";
+                loadProfile();
+            } else {
+                showError("Failed to upload resume");
+            }
+        } catch (error) {
+            showError("Network error. Please try again.");
+        }
+    }
+
+    // UPLOAD PHOTO
+   async function uploadPhoto() {
+    let fileInput = document.getElementById("photoFile");
+    let file = fileInput.files[0];
+
+    if (!file) {
+        showError("Please select a file to upload");
+        return;
+    }
+
+    let fd = new FormData();
+    fd.append("file", file);
+
+    try {
+        let res = await fetch(`/student/uploadPhoto/${studentId}`, {
+            method: "POST",
+            body: fd
+        });
+
+        let message = await res.text();
+
+        if (message.includes("Photo uploaded")) {
+            showSuccess("Photo uploaded successfully!");
+            fileInput.value = "";
+            loadProfile();
+        } else {
+            showError("Failed to upload photo");
+        }
+
+    } catch (error) {
+        showError("Network error. Please try again.");
+    }
+}
+
+
+    // LOGOUT FUNCTION
+    function logout() {
+        localStorage.removeItem("token");
+        localStorage.removeItem("studentId");
+        window.location.href = "login.html";
+    }
+
+    // NOTIFICATION FUNCTIONS
+    function showSuccess(message) {
+        const successAlert = document.getElementById("successAlert");
+        successAlert.textContent = message;
+        successAlert.style.display = "block";
+
+        setTimeout(() => {
+            successAlert.style.display = "none";
+        }, 5000);
+    }
+
+    function showError(message) {
+        const errorAlert = document.getElementById("errorAlert");
+        errorAlert.textContent = message;
+        errorAlert.style.display = "block";
+
+        setTimeout(() => {
+            errorAlert.style.display = "none";
+        }, 5000);
+    }
+
+    // File input label update
+    document.getElementById('resumeFile').addEventListener('change', function(e) {
+        let fileName = e.target.files[0] ? e.target.files[0].name : 'Choose File';
+        document.querySelector('label[for="resumeFile"]').textContent = fileName;
+    });
+
+    document.getElementById('photoFile').addEventListener('change', function(e) {
+        let fileName = e.target.files[0] ? e.target.files[0].name : 'Choose File';
+        document.querySelector('label[for="photoFile"]').textContent = fileName;
+    });
+</script>
+</body>
+</html>

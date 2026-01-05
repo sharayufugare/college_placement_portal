@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Student Login/Register</title>
+</head>
+<body>
+<h2>Register Student</h2>
+<form id="registerForm">
+    <input type="text" id="fullName" placeholder="Full Name" required />
+    <input type="email" id="email" placeholder="Email" required />
+    <input type="password" id="password" placeholder="Password" required />
+    <input type="text" id="college" placeholder="College" required />
+    <button type="submit">Register</button>
+</form>
+
+<h2>Login</h2>
+<form id="loginForm">
+    <input type="email" id="loginEmail" placeholder="Email" required />
+    <input type="password" id="loginPassword" placeholder="Password" required />
+    <button type="submit">Login</button>
+</form>
+
+<script>
+    // Register
+    document.getElementById("registerForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const student = {
+        full_name: document.getElementById("fullName").value,
+        email: document.getElementById("email").value,
+        password: document.getElementById("password").value,
+        college: document.getElementById("college").value
+      };
+
+      const response = await fetch("http://localhost:8080/api/students/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(student)
+      });
+      const data = await response.json();
+      console.log("Registered:", data);
+      alert("Registered successfully!");
+    });
+
+    // Login
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const credentials = {
+        email: document.getElementById("loginEmail").value,
+        password: document.getElementById("loginPassword").value
+      };
+
+      const response = await fetch("http://localhost:8080/api/students/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(credentials)
+      });
+      const data = await response.json();
+      console.log("Login Response:", data);
+
+      if (data.status === "success") {
+        alert("Login Successful!");
+      } else {
+        alert("Invalid Credentials!");
+      }
+    });
+</script>
+</body>
+</html>

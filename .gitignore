@@ -1,0 +1,21 @@
+# Maven / Gradle
+target/
+build/
+
+# IntelliJ
+.idea/
+*.iml
+
+# Logs
+*.log
+
+# Environment / secrets
+.env
+
+# OS files
+.DS_Store
+Thumbs.db
+# Uploaded files
+uploads/
+uploads/photos/
+uploads/resumes/

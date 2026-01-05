@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TNP Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #7209b7;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --info: #17a2b8;
+            --border-radius: 12px;
+            --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .dashboard-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 20px 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            font-size: 28px;
+            color: var(--primary);
+        }
+
+        .logo-text h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 4px;
+        }
+
+        .logo-text p {
+            font-size: 14px;
+            color: var(--gray);
+        }
+
+        .logout-btn {
+            background: var(--light);
+            color: var(--dark);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .logout-btn:hover {
+            background: var(--light-gray);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Main Content */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 992px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Card Styles */
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            padding: 20px 25px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .card-header h3 {
+            font-size: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-body {
+            padding: 25px;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            font-size: 15px;
+            transition: var(--transition);
+            background: var(--light);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--light);
+            color: var(--dark);
+        }
+
+        .btn-secondary:hover {
+            background: var(--light-gray);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-info {
+            background: var(--info);
+            color: white;
+        }
+
+        .btn-info:hover {
+            background: #138496;
+        }
+
+        /* Search Section */
+        .search-section {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            flex: 1;
+        }
+
+        /* Table Styles */
+        .table-container {
+            overflow-x: auto;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        thead {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        th {
+            padding: 16px 20px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid var(--light-gray);
+            transition: var(--transition);
+        }
+
+        tbody tr:hover {
+            background: rgba(67, 97, 238, 0.05);
+        }
+
+        td {
+            padding: 16px 20px;
+            color: var(--dark);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .status-open {
+            background: rgba(40, 167, 69, 0.15);
+            color: var(--success);
+        }
+
+        .status-closed {
+            background: rgba(220, 53, 69, 0.15);
+            color: var(--danger);
+        }
+
+        .status-pending {
+            background: rgba(255, 193, 7, 0.15);
+            color: #b88a00;
+        }
+
+        .status-accepted {
+            background: rgba(40, 167, 69, 0.2);
+            color: var(--success);
+        }
+
+        .status-rejected {
+            background: rgba(220, 53, 69, 0.2);
+            color: var(--danger);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            white-space: nowrap;
+        }
+
+        /* Message Styles */
+        .message {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .message-success {
+            background: rgba(40, 167, 69, 0.15);
+            color: var(--success);
+            border-left: 4px solid var(--success);
+        }
+
+        .message-error {
+            background: rgba(220, 53, 69, 0.15);
+            color: var(--danger);
+            border-left: 4px solid var(--danger);
+        }
+
+        .message-info {
+            background: rgba(23, 162, 184, 0.15);
+            color: var(--info);
+            border-left: 4px solid var(--info);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: var(--light-gray);
+        }
+
+        /* Application Table Specific */
+        .sort-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .btn-tick {
+            background: var(--success) !important;
+            color: white;
+            font-size: 16px;
+            cursor: default !important;
+        }
+
+        .btn-cross {
+            background: var(--danger) !important;
+            color: white;
+            font-size: 16px;
+            cursor: default !important;
+        }
+
+        .rejection-message {
+            font-size: 12px;
+            color: var(--danger);
+            background: #ffe6e6;
+            padding: 5px 10px;
+            border-radius: 4px;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        .status-updated {
+            animation: statusPulse 0.5s ease-in-out 2;
+        }
+
+        @keyframes statusPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: var(--primary);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            margin-bottom: 30px;
+            box-shadow: var(--box-shadow);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 15px;
+            background: none;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--gray);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .search-section {
+                flex-direction: column;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            th, td {
+                padding: 12px 15px;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="dashboard-container">
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">
+            <i class="fas fa-graduation-cap logo-icon"></i>
+            <div class="logo-text">
+                <h1>TNP Admin Dashboard</h1>
+                <p>Manage company placements and student applications</p>
+            </div>
+        </div>
+        <button class="logout-btn" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('companies',event)">
+            <i class="fas fa-building"></i> Companies
+        </button>
+        <button class="tab-btn" onclick="switchTab('applications',event)">
+            <i class="fas fa-file-alt"></i> Applications
+        </button>
+    </div>
+
+    <!-- Companies Tab -->
+    <div id="companies-tab" class="tab-content active">
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Add Company Form -->
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-building"></i> Add Company Details</h3>
+                </div>
+                <div class="card-body">
+                    <form id="companyForm">
+                        <div class="form-group">
+                            <label for="company_name">Company Name</label>
+                            <input type="text" id="company_name" class="form-control" placeholder="Enter company name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="skills">Required Skill Set</label>
+                            <input type="text" id="skills" class="form-control" placeholder="e.g., Java, Python, SQL">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="criteria">Eligibility Criteria</label>
+                            <input type="text" id="criteria" class="form-control" placeholder="e.g., CGPA > 8">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="status">Placement Status</label>
+                            <select id="status" class="form-control">
+                                <option value="Open">Open</option>
+                                <option value="Closed">Closed</option>
+                            </select>
+                        </div>
+
+                        <button type="button" class="btn btn-primary" onclick="submitCompany()">
+                            <i class="fas fa-plus-circle"></i> Add Company
+                        </button>
+                    </form>
+                    <div id="msg"></div>
+                </div>
+            </div>
+
+            <!-- Search Companies -->
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-search"></i> Search Companies</h3>
+                </div>
+                <div class="card-body">
+                    <div class="search-section">
+                        <div class="form-group search-input">
+                            <label for="searchSkill">Skill</label>
+                            <input type="text" id="searchSkill" class="form-control" placeholder="e.g., Java">
+                        </div>
+                        <div class="form-group search-input">
+                            <label for="searchCriteria">Criteria</label>
+                            <input type="text" id="searchCriteria" class="form-control" placeholder="e.g., CGPA > 8">
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-secondary" onclick="searchCompanies()">
+                        <i class="fas fa-search"></i> Search Companies
+                    </button>
+                    <button type="button" class="btn btn-info" onclick="resetSearch()" style="margin-left: 10px;">
+                        <i class="fas fa-redo"></i> Reset
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- All Companies Table -->
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="fas fa-list"></i> All Company Details</h3>
+            </div>
+            <div class="table-container">
+                <table id="companyTable">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Company Name</th>
+                        <th>Skills</th>
+                        <th>Criteria</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody id="companyBody">
+                    <!-- Dynamically filled by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Applications Tab -->
+    <div id="applications-tab" class="tab-content">
+        <!-- Applications Control Panel -->
+        <div class="main-content">
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-filter"></i> Filter Applications</h3>
+                </div>
+                <div class="card-body">
+                    <div class="search-section">
+                        <div class="form-group search-input">
+                            <label for="filterStudent">Student Name</label>
+                            <input type="text" id="filterStudent" class="form-control" placeholder="Search by student name">
+                        </div>
+                        <div class="form-group search-input">
+                            <label for="filterCompany">Company</label>
+                            <input type="text" id="filterCompany" class="form-control" placeholder="Search by company">
+                        </div>
+                        <div class="form-group" style="min-width: 180px;">
+                            <label for="filterStatus">Status</label>
+                            <select id="filterStatus" class="form-control">
+                                <option value="">All Status</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Accepted">Accepted</option>
+                                <option value="Rejected">Rejected</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="filterApplications()">
+                        <i class="fas fa-filter"></i> Apply Filter
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="clearFilters()" style="margin-left: 10px;">
+                        <i class="fas fa-times"></i> Clear Filters
+                    </button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-chart-bar"></i> Application Stats</h3>
+                </div>
+                <div class="card-body">
+                    <div style="display: flex; justify-content: space-around; text-align: center; flex-wrap: wrap;">
+                        <div>
+                            <h4 id="totalApps">0</h4>
+                            <p>Total Applications</p>
+                        </div>
+                        <div>
+                            <h4 id="pendingApps">0</h4>
+                            <p>Pending</p>
+                        </div>
+                        <div>
+                            <h4 id="acceptedApps">0</h4>
+                            <p>Accepted</p>
+                        </div>
+                        <div>
+                            <h4 id="rejectedApps">0</h4>
+                            <p>Rejected</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Applications Table -->
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="fas fa-file-alt"></i> Student Applications</h3>
+                <div style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
+                    <div class="sort-control">
+                        <span>Sort by:</span>
+                        <select id="sortSelect">
+                            <option value="company-asc">Company (A-Z)</option>
+                            <option value="company-desc">Company (Z-A)</option>
+                            <option value="date-asc">Date (Oldest First)</option>
+                            <option value="date-desc">Date (Newest First)</option>
+                            <option value="status">Status</option>
+                            <option value="student-asc">Student (A-Z)</option>
+                            <option value="student-desc">Student (Z-A)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="table-container">
+                <table id="applicationsTable">
+                    <thead>
+                    <tr>
+                        <th>Student Name</th>
+                        <th>Company</th>
+                        <th>Status</th>
+                        <th>Applied Date</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody id="appTableBody">
+                    <!-- Dynamically filled by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Company Modal -->
+<div id="editModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-edit"></i> Edit Company Details</h3>
+            <button class="close-modal" onclick="closeEditModal()">&times;</button>
+        </div>
+        <div id="editFormContent">
+            <!-- Edit form will be inserted here -->
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentCompanies = [];
+    let applicationsData = [];
+    let filteredApplications = [];
+
+    document.addEventListener("DOMContentLoaded", function() {
+        loadCompanies();
+        loadApplications();
+    });
+
+    function switchTab(tabName, event) {
+        // Remove active from all buttons
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+
+        // Add active ONLY if event exists
+        if (event && event.target) {
+            event.target.classList.add('active');
+        } else {
+            // fallback: activate based on tabName
+            const index = tabName === 'companies' ? 0 : 1;
+            document.querySelectorAll('.tab-btn')[index].classList.add('active');
+        }
+
+        // switch content
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+        });
+
+        document.getElementById(tabName + '-tab').classList.add('active');
+    }
+
+    // Company Management Functions
+    async function submitCompany() {
+        const company = {
+            companyName: document.getElementById('company_name').value.trim(),
+            skills: document.getElementById('skills').value.trim(),
+            criteria: document.getElementById('criteria').value.trim(),
+            status: document.getElementById('status').value
+        };
+
+        const msg = document.getElementById("msg");
+
+        if (!company.companyName) {
+            msg.className = "message message-error";
+            msg.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please enter company name!';
+            return;
+        }
+
+        try {
+            const response = await fetch("/api/company/add", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams(company)
+            });
+
+            if (response.ok) {
+                msg.className = "message message-success";
+                msg.innerHTML = '<i class="fas fa-check-circle"></i> Company added successfully!';
+                document.getElementById("companyForm").reset();
+                loadCompanies();
+            } else {
+                msg.className = "message message-error";
+                msg.innerHTML = '<i class="fas fa-times-circle"></i> Failed to save company!';
+            }
+        } catch (err) {
+            console.error(err);
+            msg.className = "message message-error";
+            msg.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Server error!';
+        }
+    }
+
+    async function loadCompanies() {
+        const tableBody = document.getElementById("companyBody");
+        tableBody.innerHTML = "";
+
+        try {
+            const res = await fetch("/api/company/all");
+            currentCompanies = await res.json();
+
+            if (currentCompanies.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6">
+                            <div class="empty-state">
+                                <i class="fas fa-building"></i>
+                                <h3>No companies added yet</h3>
+                                <p>Add your first company using the form above</p>
+                            </div>
+                        </td>
+                    </tr>`;
+                return;
+            }
+
+            currentCompanies.forEach(c => {
+                const statusClass = c.status === 'Open' ? 'status-open' : 'status-closed';
+                tableBody.innerHTML += `
+                    <tr>
+                        <td>${c.id}</td>
+                        <td><strong>${c.companyName}</strong></td>
+                        <td>${c.skills}</td>
+                        <td>${c.criteria}</td>
+                        <td><span class="status-badge ${statusClass}">${c.status}</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-secondary action-btn" onclick="editCompany(${c.id})">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <button class="btn btn-danger action-btn" onclick="deleteCompany(${c.id})">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                                <button class="btn btn-info action-btn" onclick="viewApplications(${c.id}, '${c.companyName}')">
+                                    <i class="fas fa-eye"></i> View Apps
+                                </button>
+                            </div>
+                        </td>
+                    </tr>`;
+            });
+        } catch (err) {
+            console.error(err);
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="6">
+                        <div class="empty-state">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <h3>Error loading companies</h3>
+                            <p>Please check your connection and try again</p>
+                        </div>
+                    </td>
+                </tr>`;
+        }
+    }
+
+    async function deleteCompany(id) {
+        if (!confirm("Are you sure you want to delete this company?")) return;
+
+        try {
+            await fetch(`/api/company/delete/${id}`, { method: "DELETE" });
+            const msg = document.getElementById("msg");
+            msg.className = "message message-success";
+            msg.innerHTML = '<i class="fas fa-check-circle"></i> Company deleted successfully!';
+            loadCompanies();
+        } catch (err) {
+            console.error(err);
+            const msg = document.getElementById("msg");
+            msg.className = "message message-error";
+            msg.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error deleting company!';
+        }
+    }
+
+    async function searchCompanies() {
+        const skill = document.getElementById("searchSkill").value.trim();
+        const criteria = document.getElementById("searchCriteria").value.trim();
+
+        try {
+            const res = await fetch(`/api/company/search?skill=${skill}&criteria=${criteria}`);
+            const companies = await res.json();
+
+            const tableBody = document.getElementById("companyBody");
+            tableBody.innerHTML = "";
+
+            if (companies.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6">
+                            <div class="empty-state">
+                                <i class="fas fa-search"></i>
+                                <h3>No matching companies found</h3>
+                                <p>Try adjusting your search criteria</p>
+                            </div>
+                        </td>
+                    </tr>`;
+                return;
+            }
+
+            companies.forEach(c => {
+                const statusClass = c.status === 'Open' ? 'status-open' : 'status-closed';
+                tableBody.innerHTML += `
+                    <tr>
+                        <td>${c.id}</td>
+                        <td><strong>${c.companyName}</strong></td>
+                        <td>${c.skills}</td>
+                        <td>${c.criteria}</td>
+                        <td><span class="status-badge ${statusClass}">${c.status}</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-secondary action-btn" onclick="editCompany(${c.id})">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <button class="btn btn-danger action-btn" onclick="deleteCompany(${c.id})">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                                <button class="btn btn-info action-btn" onclick="viewApplications(${c.id}, '${c.companyName}')">
+                                    <i class="fas fa-eye"></i> View Apps
+                                </button>
+                            </div>
+                        </td>
+                    </tr>`;
+            });
+        } catch (err) {
+            console.error(err);
+            const msg = document.getElementById("msg");
+            msg.className = "message message-error";
+            msg.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error searching companies!';
+        }
+    }
+
+    function resetSearch() {
+        document.getElementById("searchSkill").value = "";
+        document.getElementById("searchCriteria").value = "";
+        loadCompanies();
+    }
+
+    function editCompany(id) {
+        const company = currentCompanies.find(c => c.id === id);
+
+        if (!company) {
+            alert("Company not found!");
+            return;
+        }
+
+        const editForm = `
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+                <div>
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600;">Company Name</label>
+                    <input type="text" id="editName" value="${company.companyName || ''}" class="form-control">
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600;">Skills</label>
+                    <input type="text" id="editSkills" value="${company.skills || ''}" class="form-control">
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600;">Criteria</label>
+                    <input type="text" id="editCriteria" value="${company.criteria || ''}" class="form-control">
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600;">Status</label>
+                    <select id="editStatus" class="form-control">
+                        <option value="Open" ${company.status === 'Open' ? 'selected' : ''}>Open</option>
+                        <option value="Closed" ${company.status === 'Closed' ? 'selected' : ''}>Closed</option>
+                    </select>
+                </div>
+                <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: flex-end;">
+                    <button class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+                    <button class="btn btn-primary" onclick="saveEdit(${id})">Save Changes</button>
+                </div>
+            </div>
+        `;
+
+        document.getElementById('editFormContent').innerHTML = editForm;
+        document.getElementById('editModal').style.display = 'flex';
+    }
+
+    function closeEditModal() {
+        document.getElementById('editModal').style.display = 'none';
+    }
+
+    async function saveEdit(id) {
+        const updated = {
+            companyName: document.getElementById('editName').value.trim(),
+            skills: document.getElementById('editSkills').value.trim(),
+            criteria: document.getElementById('editCriteria').value.trim(),
+            status: document.getElementById('editStatus').value
+        };
+
+        if (!updated.companyName) {
+            alert("Company name is required!");
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/company/update/${id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(updated)
+            });
+
+            if (response.ok) {
+                closeEditModal();
+                loadCompanies();
+                const msg = document.getElementById("msg");
+                msg.className = "message message-success";
+                msg.innerHTML = '<i class="fas fa-check-circle"></i> Company updated successfully!';
+            } else {
+                alert("Failed to update company!");
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Server error!");
+        }
+    }
+
+    function viewApplications(companyId, companyName) {
+        // Switch to applications tab without using event parameter
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+        });
+
+        document.getElementById('applications-tab').classList.add('active');
+        document.querySelectorAll('.tab-btn')[1].classList.add('active');
+
+        // Set filter and apply
+        document.getElementById('filterCompany').value = companyName;
+        filterApplications();
+    }
+
+    // Application Management Functions
+    async function loadApplications() {
+        const tbody = document.getElementById("appTableBody");
+        tbody.innerHTML = `<tr><td colspan="5" style="padding: 40px; text-align: center;"><i class="fas fa-spinner fa-spin"></i> Loading applications...</td></tr>`;
+
+        try {
+            const response = await fetch("/tnp/applications");
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            applicationsData = await response.json();
+            filteredApplications = [...applicationsData];
+            renderApplications();
+            updateStats();
+            return true;
+        } catch (error) {
+            console.error('Error fetching applications:', error);
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="5" style="padding: 40px; text-align: center; color: #dc3545;">
+                        <i class="fas fa-exclamation-triangle"></i> Error loading applications. Please check server connection.
+                    </td>
+                </tr>`;
+            return false;
+        }
+    }
+
+    function renderApplications() {
+        const tbody = document.getElementById("appTableBody");
+
+        // Safety guard: check if filteredApplications is an array
+        if (!Array.isArray(filteredApplications)) {
+            console.error("Applications data is not an array", filteredApplications);
+            tbody.innerHTML = `<tr><td colspan="5">Invalid application data</td></tr>`;
+            return;
+        }
+
+        if (filteredApplications.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="5">
+                        <div class="empty-state">
+                            <i class="fas fa-search"></i>
+                            <h3>No applications found</h3>
+                            <p>Try adjusting your filters</p>
+                        </div>
+                    </td>
+                </tr>`;
+            return;
+        }
+
+        tbody.innerHTML = '';
+
+        filteredApplications.forEach(app => {
+            const studentName = app.student?.name || app.studentName || 'Unknown Student';
+            const companyName = app.company?.companyName || app.companyName || 'Unknown Company';
+            const status = app.status || 'Pending';
+            const appliedDate = app.appliedDate || 'N/A';
+            const appId = app.id;
+
+            let statusClass = 'status-pending';
+            if (status.toLowerCase().includes('accept')) statusClass = 'status-accepted';
+            else if (status.toLowerCase().includes('reject')) statusClass = 'status-rejected';
+
+           const isPending = status.toLowerCase() === 'pending' || status.toLowerCase() === 'applied';
+
+            const isAccepted = status.toLowerCase().includes('accept');
+            const isRejected = status.toLowerCase().includes('reject');
+
+            tbody.innerHTML += `
+            <tr>
+                <td><strong>${escapeHtml(studentName)}</strong></td>
+                <td>${escapeHtml(companyName)}</td>
+                <td><span class="status-badge ${statusClass}">${escapeHtml(status)}</span></td>
+                <td>${escapeHtml(appliedDate)}</td>
+                <td>
+                    <div class="action-buttons">
+                        ${isAccepted
+                            ? `<button class="btn btn-success action-btn btn-tick" disabled>✓ Accepted</button>`
+                            : `<button class="btn btn-success action-btn"
+                                    ${!isPending ? 'disabled' : ''}
+                                    onclick="handleAccept('${appId}', '${escapeHtml(studentName)}')">
+                                    <i class="fas fa-check"></i> Accept
+                               </button>`
+                        }
+
+                        ${isRejected
+                            ? `<button class="btn btn-danger action-btn btn-cross" disabled>✗ Rejected</button>`
+                            : `<button class="btn btn-danger action-btn"
+                                    ${!isPending ? 'disabled' : ''}
+                                    onclick="handleReject('${appId}', '${escapeHtml(studentName)}')">
+                                    <i class="fas fa-times"></i> Reject
+                               </button>`
+                        }
+
+                        <button class="btn btn-info action-btn"
+                                onclick="viewApplicationDetails('${appId}')">
+                            <i class="fas fa-info-circle"></i> Details
+                        </button>
+                    </div>
+                </td>
+            </tr>`;
+        });
+    }
+
+    function filterApplications() {
+        const studentFilter = document.getElementById('filterStudent').value.toLowerCase();
+        const companyFilter = document.getElementById('filterCompany').value.toLowerCase();
+        const statusFilter = document.getElementById('filterStatus').value;
+
+        filteredApplications = applicationsData.filter(app => {
+            const studentName = (app.student?.name || app.studentName || '').toLowerCase();
+            const companyName = (app.company?.companyName || app.company?.name || app.companyName || '').toLowerCase();
+            const status = app.status || 'Pending';
+
+            const matchesStudent = studentName.includes(studentFilter);
+            const matchesCompany = companyName.includes(companyFilter);
+            const matchesStatus = !statusFilter || status.toLowerCase().includes(statusFilter.toLowerCase());
+
+            return matchesStudent && matchesCompany && matchesStatus;
+        });
+
+        // Apply sorting
+        const sortValue = document.getElementById('sortSelect').value;
+        sortApplications(sortValue);
+
+        renderApplications();
+        updateStats();
+    }
+
+    function clearFilters() {
+        document.getElementById('filterStudent').value = '';
+        document.getElementById('filterCompany').value = '';
+        document.getElementById('filterStatus').value = '';
+        filteredApplications = [...applicationsData];
+        sortApplications(document.getElementById('sortSelect').value);
+        renderApplications();
+        updateStats();
+    }
+
+    function sortApplications(sortBy) {
+        filteredApplications.sort((a, b) => {
+            const studentNameA = (a.student?.name || a.studentName || '').toLowerCase();
+            const studentNameB = (b.student?.name || b.studentName || '').toLowerCase();
+            const companyNameA = (a.company?.companyName || a.company?.name || a.companyName || '').toLowerCase();
+            const companyNameB = (b.company?.companyName || b.company?.name || b.companyName || '').toLowerCase();
+            const dateA = new Date(a.appliedDate || a.dateApplied || a.createdAt || 0);
+            const dateB = new Date(b.appliedDate || b.dateApplied || b.createdAt || 0);
+            const statusA = (a.status || 'pending').toLowerCase();
+            const statusB = (b.status || 'pending').toLowerCase();
+
+            switch(sortBy) {
+                case 'company-asc':
+                    return companyNameA.localeCompare(companyNameB);
+                case 'company-desc':
+                    return companyNameB.localeCompare(companyNameA);
+                case 'date-asc':
+                    return dateA - dateB;
+                case 'date-desc':
+                    return dateB - dateA;
+                case 'status':
+                    return statusA.localeCompare(statusB);
+                case 'student-asc':
+                    return studentNameA.localeCompare(studentNameB);
+                case 'student-desc':
+                    return studentNameB.localeCompare(studentNameA);
+                default:
+                    return 0;
+            }
+        });
+    }
+
+    document.getElementById('sortSelect').addEventListener('change', function() {
+        sortApplications(this.value);
+        renderApplications();
+    });
+
+    function updateStats() {
+        const total = applicationsData.length;
+        const pending = applicationsData.filter(app => (app.status || 'Pending').toLowerCase() === 'pending').length;
+        const accepted = applicationsData.filter(app => (app.status || '').toLowerCase().includes('accept')).length;
+        const rejected = applicationsData.filter(app => (app.status || '').toLowerCase().includes('reject')).length;
+
+        document.getElementById('totalApps').textContent = total;
+        document.getElementById('pendingApps').textContent = pending;
+        document.getElementById('acceptedApps').textContent = accepted;
+        document.getElementById('rejectedApps').textContent = rejected;
+    }
+
+    async function handleAccept(applicationId, studentName) {
+        if (!confirm(`Accept application from ${studentName}?`)) return;
+
+        try {
+            await fetch(`/tnp/applications/${applicationId}/accept`, {
+                method: "PUT"
+            });
+
+            await loadApplications(); // reload from backend
+        } catch (error) {
+            console.error('Error accepting application:', error);
+            alert('Error accepting application. Please try again.');
+        }
+    }
+
+    async function handleReject(applicationId, studentName) {
+        const rejectionReason = prompt(`Reject application from ${studentName}. Please enter rejection reason:`,
+                                      "We regret to inform you that your application has been rejected due to high competition.");
+
+        if (rejectionReason === null) {
+            return;
+        }
+
+        try {
+            // First call reject API
+            await fetch(`/tnp/applications/${applicationId}/reject`, {
+                method: "PUT"
+            });
+
+            // Then reload data
+            await loadApplications();
+
+            alert(`Application from ${studentName} has been rejected.\n\nRejection reason sent:\n"${rejectionReason}"`);
+        } catch (error) {
+            console.error('Error rejecting application:', error);
+            alert('Error rejecting application. Please try again.');
+        }
+    }
+
+    function viewApplicationDetails(appId) {
+        const app = applicationsData.find(a =>
+            (a.id || a.applicationId || a._id) === appId
+        );
+
+        if (!app) {
+            alert('Application not found!');
+            return;
+        }
+
+        const studentName = app.student?.name || app.studentName || 'Unknown';
+        const companyName = app.company?.companyName || app.companyName || 'Unknown';
+        const status = app.status || 'Pending';
+        const appliedDate = app.appliedDate || app.dateApplied || 'N/A';
+        const studentEmail = app.student?.email || 'Not provided';
+        const studentCGPA = app.student?.cgpa || 'Not provided';
+        const studentSkills = app.student?.skills || 'Not provided';
+
+        const details = `
+            <div style="background: white; padding: 20px; border-radius: 8px;">
+                <h3 style="margin-bottom: 20px; color: #4361ee;">Application Details</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div>
+                        <strong>Student Name:</strong><br>
+                        ${escapeHtml(studentName)}
+                    </div>
+                    <div>
+                        <strong>Company:</strong><br>
+                        ${escapeHtml(companyName)}
+                    </div>
+                    <div>
+                        <strong>Status:</strong><br>
+                        <span class="status-badge ${status.toLowerCase().includes('accept') ? 'status-accepted' :
+                            status.toLowerCase().includes('reject') ? 'status-rejected' : 'status-pending'}">
+                            ${escapeHtml(status)}
+                        </span>
+                    </div>
+                    <div>
+                        <strong>Applied Date:</strong><br>
+                        ${escapeHtml(appliedDate)}
+                    </div>
+                    <div>
+                        <strong>Student Email:</strong><br>
+                        ${escapeHtml(studentEmail)}
+                    </div>
+                    <div>
+                        <strong>Student CGPA:</strong><br>
+                        ${escapeHtml(studentCGPA)}
+                    </div>
+                </div>
+                <div style="margin-top: 15px;">
+                    <strong>Student Skills:</strong><br>
+                    ${escapeHtml(studentSkills)}
+                </div>
+                <div style="margin-top: 20px; text-align: center;">
+                    <button class="btn btn-primary" onclick="this.parentElement.parentElement.remove()">
+                        Close
+                    </button>
+                </div>
+            </div>
+        `;
+
+        const modal = document.createElement('div');
+        modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        `;
+        modal.innerHTML = details;
+        document.body.appendChild(modal);
+
+        // Close modal when clicking outside
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                document.body.removeChild(modal);
+            }
+        });
+    }
+
+    function escapeHtml(str) {
+        if (str === null || str === undefined) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+    function logout() {
+        localStorage.removeItem("token");
+        localStorage.removeItem("studentId");
+        alert("Logged out successfully!");
+        window.location.href = "HomePage.html";
+    }
+</script>
+</body>
+</html>
